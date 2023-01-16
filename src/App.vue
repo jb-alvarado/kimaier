@@ -29,41 +29,44 @@
       >
     </p> -->
 
-        <Control v-if="isRegister" />
-        <Register v-else />
+        <Control v-if="isRegister" @reg-event="setRegister" />
+        <Register v-else @reg-event="setRegister" />
     </div>
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { onMounted, ref } from 'vue'
 import Control from './components/Control.vue'
 import Register from './components/Register.vue'
 import { invoke } from '@tauri-apps/api/tauri'
 
-interface User {
-    name: string
-    api_pass: string
-    workspace: string
-}
+import { storeToRefs } from 'pinia'
+import { useMainStore } from './stores/main'
+
+const { user, authHeader } = storeToRefs(useMainStore())
+// const { setUser } = useMainStore()
 
 const isRegister = ref(false)
-const user = ref({
-    name: '',
-    api_pass: '',
-    workspace: '',
-} as User)
 
-onMounted(async() => {
+const setRegister = (val: boolean) => (isRegister.value = val)
+
+onMounted(async () => {
     user.value = JSON.parse(await invoke('get_user'))
 
-    console.log(user.value)
-
-    if (user.value.name === '' || user.value.api_pass === '' || user.value.workspace === '') {
+    if (
+        user.value.name === '' ||
+        user.value.api_pass === '' ||
+        user.value.api_url === '' ||
+        user.value.workspace === ''
+    ) {
         isRegister.value = false
     } else {
         isRegister.value = true
 
-        // run_timer(counter)
+        authHeader.value = {
+            "X-AUTH-USER": user.value.name,
+            "X-AUTH-TOKEN": user.value.api_pass
+        }
     }
 })
 </script>

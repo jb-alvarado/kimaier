@@ -17,6 +17,7 @@
         "@fortawesome/vue-fontawesome": "^3.0.2",
         "@tauri-apps/api": "^1.2.0",
         "dayjs": "^1.11.7",
+        "pinia": "^2.0.29",
         "vue": "^3.2.45"
     },
     "devDependencies": {

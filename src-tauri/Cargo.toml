@@ -1,5 +1,5 @@
 [package]
-name = "kimair"
+name = "kimaier"
 version = "0.1.0"
 description = "Simple desktop time tracker, based on kimai backend"
 authors = ["Jonathan Bäcker <jonbae77@gmail.com>"]
@@ -15,7 +15,7 @@ tauri-build = { version = "1.2", features = [] }
 
 [dependencies]
 preferences = { git = "https://github.com/andybarron/preferences-rs.git" }
-# reqwest = "0.11"
+reqwest = { version = "0.11", features = ["blocking", "json"] }
 serde_json = "1"
 serde = { version = "1.0", features = ["derive"] }
 tauri = { version = "1.2", features = ["shell-open"] }

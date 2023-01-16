@@ -60,10 +60,10 @@
     "windows": [
       {
         "fullscreen": false,
-        "height": 500,
+        "height": 400,
         "resizable": true,
-        "title": "kimaier",
-        "width": 400
+        "title": "Kimaier",
+        "width": 300
       }
     ]
   }
