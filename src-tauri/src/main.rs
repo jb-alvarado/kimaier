@@ -72,13 +72,16 @@ fn main() {
             }
             SystemTrayEvent::MenuItemClick { id, .. } => {
                 let window = app.get_window("main").unwrap();
+                let item_handle = app.tray_handle().get_item(&id);
 
                 match id.as_str() {
                     "hide" => {
                         if window.is_visible().unwrap() {
                             window.hide().unwrap();
+                            item_handle.set_title("Show").unwrap();
                         } else {
                             window.show().unwrap();
+                            item_handle.set_title("Hide").unwrap();
                             let _ = window.move_window(Position::TopRight);
                         }
                     }
