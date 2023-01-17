@@ -4,14 +4,24 @@
 )]
 
 use tauri::Manager;
+use tauri::{CustomMenuItem, SystemTray, SystemTrayMenu, SystemTrayMenuItem};
 use tauri_plugin_positioner::{Position, WindowExt};
 
 pub mod utils;
 
-use utils::{get_activities, get_user, greet, read_config, save_user, start_activity};
+use utils::{get_user, get_work, greet, read_config, read_user, read_work, save_user, save_work};
 
 fn main() {
-    let user = read_config();
+    let quit = CustomMenuItem::new("quit".to_string(), "Quit");
+    let hide = CustomMenuItem::new("hide".to_string(), "Hide");
+    let tray_menu = SystemTrayMenu::new()
+        .add_item(quit)
+        .add_native_item(SystemTrayMenuItem::Separator)
+        .add_item(hide);
+    let system_tray = SystemTray::new().with_menu(tray_menu);
+    let config = read_config();
+    let user = read_user();
+    let work = read_work();
 
     tauri::Builder::default()
         .setup(|app| {
@@ -20,14 +30,13 @@ fn main() {
 
             Ok(())
         })
+        .manage(config)
         .manage(user)
+        .manage(work)
         .invoke_handler(tauri::generate_handler![
-            greet,
-            get_user,
-            save_user,
-            get_activities,
-            start_activity
+            greet, get_user, get_work, save_user, save_work
         ])
+        .system_tray(system_tray)
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

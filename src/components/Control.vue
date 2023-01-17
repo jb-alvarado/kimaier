@@ -1,51 +1,57 @@
 <template>
-    <div class="card">
-        <button v-if="isRunning" id="control-button" type="button" @click="setState()">
-            <i class="fa-regular fa-circle-pause"></i>
-        </button>
-        <button v-else id="control-button" type="button" @click="setState()">
-            <i class="fa-regular fa-circle-play"></i>
-        </button>
-    </div>
+    <div class="container">
+        <div class="card">
+            <button v-if="isRunning" id="control-button" type="button" @click="setState()">
+                <i class="fa-regular fa-circle-pause"></i>
+            </button>
+            <button v-else id="control-button" type="button" @click="setState()">
+                <i class="fa-regular fa-circle-play"></i>
+            </button>
+        </div>
 
-    <p class="timer">{{ timer }}</p>
+        <p class="timer">{{ secToHMS(timer) }}</p>
 
-    <div class="footer">
-        <button class="settings-button" type="button" @click="sendRegEvent(false)">
-            <i class="fa-solid fa-gear"></i>
-        </button>
-        <a href="https://github.com/rust-lang/rust-analyzer" target="_blank" class="settings-button" type="button">
-            <i class="fa-solid fa-pen-to-square"></i>
-        </a>
+        <div class="footer">
+            <button class="settings-button" type="button" @click="sendRegEvent(false)">
+                <i class="fa-solid fa-gear"></i>
+            </button>
+            <div class="spacer"></div>
+            <a :href="user.api_url" target="_blank">
+                <button class="settings-button" type="button">
+                    <i class="fa-regular fa-file-lines"></i>
+                </button>
+            </a>
+        </div>
     </div>
 </template>
 
 <script setup lang="ts">
 import dayjs from 'dayjs'
+import utc from 'dayjs/plugin/utc.js'
+import timezone from 'dayjs/plugin/timezone.js'
 import { onMounted, ref } from 'vue'
-import { invoke } from '@tauri-apps/api/tauri'
-
 import { storeToRefs } from 'pinia'
 import { useMainStore } from '../stores/main'
 
-const { user, authHeader } = storeToRefs(useMainStore())
+dayjs.extend(utc)
+dayjs.extend(timezone)
 
+const { user, work, authHeader, isRunning } = storeToRefs(useMainStore())
 const emit = defineEmits(['reg-event'])
 const sendRegEvent = (val: boolean) => emit('reg-event', val)
 
-const timer = ref(dayjs().format('HH:mm:ss'))
-const activities = ref([] as any[])
-const isRunning = ref(false)
+const timer = ref(0)
+const runningActivities = ref([] as any[])
 
 async function getActivities() {
     await fetch(`${user.value.api_url}/api/timesheets/active`, {
         method: 'GET',
         headers: new Headers({ 'Content-Type': 'application/json', ...authHeader.value }),
     })
-        .then(response => response.json())
-        .then(data => {
+        .then((response) => response.json())
+        .then((data) => {
             if (data && data.length > 0) {
-                activities.value = data
+                runningActivities.value = data
                 isRunning.value = true
             } else {
                 isRunning.value = false
@@ -53,33 +59,45 @@ async function getActivities() {
         })
         .catch(() => {
             isRunning.value = false
-            activities.value = []
+            runningActivities.value = []
         })
 }
 
-function setTimer() {
-    console.log(activities.value)
-    for (const act of activities.value) {
-        console.log(act.begin)
+function secToHMS(sec: number) {
+    let hours = Math.floor(sec / 3600)
+    sec %= 3600
+    let minutes = Math.floor(sec / 60)
+    let seconds = Math.round(sec % 60)
+
+    const m = String(minutes).padStart(2, '0')
+    const h = String(hours).padStart(2, '0')
+    const s = String(seconds).padStart(2, '0')
+    return `${h}:${m}:${s}`
+}
+
+function setTimer(time: any) {
+    if (runningActivities.value.length === 0 && timer.value !== 0) {
+        timer.value = 0
+    }
+
+    for (const act of runningActivities.value) {
+        const diff = time.diff(act.begin, 'second')
+        timer.value = diff
     }
 }
 
 async function status() {
     await getActivities()
-    setTimer()
 
     async function setStatus(resolve: any) {
         /*
             recursive function as a endless loop
         */
         const time = dayjs()
-        timer.value = time.format('HH:mm:ss')
+        setTimer(time)
 
-        // console.log(timer.value)
-
-        if (time.unix() % 20 === 0) {
+        if (time.unix() % 60 === 0) {
             await getActivities()
-            setTimer()
         }
 
         setTimeout(() => setStatus(resolve), 1000)
@@ -89,10 +107,35 @@ async function status() {
 
 async function setState() {
     if (isRunning.value) {
-        console.log('--- stop')
+        for (const activity of runningActivities.value) {
+            await fetch(`${user.value.api_url}/api/timesheets/${activity.id}`, {
+                method: 'DELETE',
+                headers: new Headers({ 'Content-Type': 'application/json', ...authHeader.value }),
+            }).then((response) => {
+                if (response.status === 204) {
+                    isRunning.value = false
+                    runningActivities.value = []
+                }
+            })
+        }
     } else {
-        // const acts = JSON.parse((await invoke('start_activity')) as any)
-        // console.log(acts)
+        await fetch(`${user.value.api_url}/api/timesheets`, {
+            method: 'POST',
+            headers: new Headers({ 'Content-Type': 'application/json', ...authHeader.value }),
+            body: JSON.stringify({
+                begin: dayjs(),
+                end: '',
+                project: work.value.project_id,
+                activity: work.value.activity_id,
+                description: '',
+                tags: '',
+            }),
+        }).then(async (response) => {
+            if (response.status === 200) {
+                isRunning.value = true
+                await getActivities()
+            }
+        })
     }
 }
 
@@ -117,8 +160,12 @@ onMounted(async () => {
 }
 
 .footer {
-    text-align: left;
-    margin-left: 15vw;
+    display: table;
+    text-align: center;
+}
+
+.spacer {
+    display: table-cell;
 }
 
 .settings-button {
@@ -136,4 +183,5 @@ onMounted(async () => {
     font-size: 24px;
     margin: 1.5em 0 0.5em 0;
 }
+
 </style>

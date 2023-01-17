@@ -1,34 +1,5 @@
 <template>
-    <div class="container">
-        <!-- <div class="row">
-      <a href="https://vitejs.dev" target="_blank">
-        <img src="/vite.svg" class="logo vite" alt="Vite logo" />
-      </a>
-      <a href="https://tauri.app" target="_blank">
-        <img src="/tauri.svg" class="logo tauri" alt="Tauri logo" />
-      </a>
-      <a href="https://vuejs.org/" target="_blank">
-        <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
-      </a>
-    </div>
-
-    <p>Click on the Tauri, Vite, and Vue logos to learn more.</p>
-
-    <p>
-      Recommended IDE setup:
-      <a href="https://code.visualstudio.com/" target="_blank">VS Code</a>
-      +
-      <a href="https://github.com/johnsoncodehk/volar" target="_blank">Volar</a>
-      +
-      <a href="https://github.com/tauri-apps/tauri-vscode" target="_blank"
-        >Tauri</a
-      >
-      +
-      <a href="https://github.com/rust-lang/rust-analyzer" target="_blank"
-        >rust-analyzer</a
-      >
-    </p> -->
-
+    <div>
         <Control v-if="isRegister" @reg-event="setRegister" />
         <Register v-else @reg-event="setRegister" />
     </div>
@@ -43,21 +14,20 @@ import { invoke } from '@tauri-apps/api/tauri'
 import { storeToRefs } from 'pinia'
 import { useMainStore } from './stores/main'
 
-const { user, authHeader } = storeToRefs(useMainStore())
-// const { setUser } = useMainStore()
+const { authHeader, user, work } = storeToRefs(useMainStore())
+const setRegister = (val: boolean) => (isRegister.value = val)
 
 const isRegister = ref(false)
 
-const setRegister = (val: boolean) => (isRegister.value = val)
-
 onMounted(async () => {
     user.value = JSON.parse(await invoke('get_user'))
+    work.value = JSON.parse(await invoke('get_work'))
 
     if (
         user.value.name === '' ||
         user.value.api_pass === '' ||
         user.value.api_url === '' ||
-        user.value.workspace === ''
+        work.value.activity_id === 0
     ) {
         isRegister.value = false
     } else {
