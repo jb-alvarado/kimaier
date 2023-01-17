@@ -4,7 +4,7 @@
 )]
 
 use tauri::Manager;
-use tauri::{CustomMenuItem, SystemTray, SystemTrayMenu, SystemTrayMenuItem};
+use tauri::{CustomMenuItem, SystemTray, SystemTrayEvent, SystemTrayMenu, SystemTrayMenuItem};
 use tauri_plugin_positioner::{Position, WindowExt};
 
 pub mod utils;
@@ -37,6 +37,56 @@ fn main() {
             greet, get_user, get_work, save_user, save_work
         ])
         .system_tray(system_tray)
+        .on_window_event(|event| match event.event() {
+            tauri::WindowEvent::CloseRequested { api, .. } => {
+                event.window().hide().unwrap();
+                api.prevent_close();
+            }
+            _ => {}
+        })
+        .on_system_tray_event(|app, event| match event {
+            SystemTrayEvent::DoubleClick {
+                position: _,
+                size: _,
+                ..
+            } => {
+                println!("double click");
+                let window = app.get_window("main").unwrap();
+                window.show().unwrap();
+            }
+            SystemTrayEvent::RightClick {
+                position: _,
+                size: _,
+                ..
+            } => {
+                let window = app.get_window("main").unwrap();
+                let item_handle = app.tray_handle().get_item("hide");
+
+                println!("item {item_handle:?}");
+
+                if window.is_visible().unwrap() {
+                    item_handle.set_title("Hide").unwrap();
+                } else {
+                    item_handle.set_title("Show").unwrap();
+                }
+            }
+            SystemTrayEvent::MenuItemClick { id, .. } => {
+                let window = app.get_window("main").unwrap();
+
+                match id.as_str() {
+                    "hide" => {
+                        if window.is_visible().unwrap() {
+                            window.hide().unwrap();
+                        } else {
+                            window.show().unwrap();
+                            let _ = window.move_window(Position::TopRight);
+                        }
+                    }
+                    _ => {}
+                }
+            }
+            _ => {}
+        })
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

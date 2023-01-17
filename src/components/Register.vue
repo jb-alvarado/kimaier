@@ -6,13 +6,14 @@
             <input v-model="user.api_pass" type="password" placeholder="API Password" />
             <input v-model="user.api_url" placeholder="API URL" />
 
-            <button type="button" @click="saveUser()">Save</button>
-
             <div class="work-group">
-                <h4>Work</h4>
                 <input v-model="work.project" placeholder="Project" />
                 <input v-model="work.activity" placeholder="Activity" />
-                <button type="button" @click="saveWork()">Save</button>
+            </div>
+
+            <div class="btn-group">
+                <button type="button" @click="sendRegEvent(true)">Cancel</button>
+                <button type="button" @click="saveUser()">Save</button>
             </div>
         </div>
 
@@ -41,7 +42,8 @@ async function saveUser() {
         'X-AUTH-TOKEN': user.value.api_pass,
     }
 
-    mainStore.setActivities()
+    await mainStore.setActivities()
+    await saveWork()
 
     setTimeout(() => {
         saveMsg.value = ''
@@ -62,12 +64,12 @@ async function saveWork() {
         }
     }
 
-    saveMsg.value = await invoke('save_work', { work: work.value })
+    // saveMsg.value = await invoke('save_work', { work: work.value })
 
-    setTimeout(() => {
-        saveMsg.value = ''
-        sendRegEvent(true)
-    }, 1000)
+    // setTimeout(() => {
+    //     saveMsg.value = ''
+    //     sendRegEvent(true)
+    // }, 1000)
 }
 
 onMounted(async () => {
@@ -76,10 +78,6 @@ onMounted(async () => {
 </script>
 
 <style scoped>
-.container {
-    padding-top: 3vh !important;
-}
-
 h4 {
     margin-top: 0;
     margin-bottom: 0.3em;
@@ -95,7 +93,6 @@ h4 {
     align-content: center;
 }
 
-button,
 input {
     display: block;
     margin: 0.5em auto 0 auto;
@@ -107,5 +104,6 @@ input {
 
 button {
     width: 80px;
+    margin: .5em .25em 0 .25em;
 }
 </style>
