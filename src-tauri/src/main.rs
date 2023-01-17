@@ -50,7 +50,6 @@ fn main() {
                 size: _,
                 ..
             } => {
-                println!("double click");
                 let window = app.get_window("main").unwrap();
                 window.show().unwrap();
             }
@@ -61,8 +60,6 @@ fn main() {
             } => {
                 let window = app.get_window("main").unwrap();
                 let item_handle = app.tray_handle().get_item("hide");
-
-                println!("item {item_handle:?}");
 
                 if window.is_visible().unwrap() {
                     item_handle.set_title("Hide").unwrap();
