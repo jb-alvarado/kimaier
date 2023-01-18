@@ -1,6 +1,6 @@
 [package]
 name = "kimaier"
-version = "0.1.1"
+version = "0.1.2"
 description = "Simple desktop time tracker, based on kimai backend"
 authors = ["Jonathan Bäcker <jonbae77@gmail.com>"]
 license = ""

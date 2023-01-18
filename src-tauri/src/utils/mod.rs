@@ -47,8 +47,8 @@ pub fn save_work(config: State<Config>, work: Work) -> Result<String, String> {
     *config.work.activity_id.lock().unwrap() = work.activity_id.lock().unwrap().clone();
 
     if write_config(&config.inner()).is_ok() {
-        return Ok("Save work success!".to_string());
+        return Ok("Save config success!".to_string());
     }
 
-    Err("Save work failed!".to_string())
+    Err("Save config failed!".to_string())
 }

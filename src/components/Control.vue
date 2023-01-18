@@ -29,12 +29,14 @@
 import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc.js'
 import timezone from 'dayjs/plugin/timezone.js'
+import customParseFormat from 'dayjs/plugin/customParseFormat'
 import { onMounted, ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useMainStore } from '../stores/main'
 
 dayjs.extend(utc)
 dayjs.extend(timezone)
+dayjs.extend(customParseFormat)
 
 const { user, work, authHeader, isRunning } = storeToRefs(useMainStore())
 const emit = defineEmits(['reg-event'])
@@ -72,6 +74,7 @@ function secToHMS(sec: number) {
     const m = String(minutes).padStart(2, '0')
     const h = String(hours).padStart(2, '0')
     const s = String(seconds).padStart(2, '0')
+
     return `${h}:${m}:${s}`
 }
 
@@ -81,7 +84,8 @@ function setTimer(time: any) {
     }
 
     for (const act of runningActivities.value) {
-        const diff = time.diff(act.begin, 'second')
+        const begin = dayjs(act.begin, 'YYYY-MM-DDTHH:mm:ss+000ZZ')
+        const diff = time.diff(begin, 'second')
         timer.value = diff
     }
 }
@@ -139,7 +143,7 @@ async function setState() {
     }
 }
 
-onMounted(async () => {
+onMounted(() => {
     status()
 })
 </script>
@@ -162,6 +166,7 @@ onMounted(async () => {
 .footer {
     display: table;
     text-align: center;
+    width: 100%;
 }
 
 .spacer {

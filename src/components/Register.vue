@@ -36,8 +36,8 @@ const sendRegEvent = (val: boolean) => emit('reg-event', val)
 const saveMsg = ref('')
 
 async function saveUser() {
-    user.value.api_url = user.value.api_url.replace(/\/+$/, '');
-    saveMsg.value = await invoke('save_user', { user: user.value })
+    user.value.api_url = user.value.api_url.replace(/\/+$/, '')
+    await invoke('save_user', { user: user.value })
     authHeader.value = {
         'X-AUTH-USER': user.value.name,
         'X-AUTH-TOKEN': user.value.api_pass,
@@ -45,13 +45,6 @@ async function saveUser() {
 
     await mainStore.setActivities()
     await saveWork()
-
-    setTimeout(() => {
-        saveMsg.value = ''
-        if (work.value.activity !== '' && work.value.project !== '') {
-            sendRegEvent(true)
-        }
-    }, 1000)
 }
 
 async function saveWork() {
@@ -65,16 +58,19 @@ async function saveWork() {
         }
     }
 
-    // saveMsg.value = await invoke('save_work', { work: work.value })
+    saveMsg.value = await invoke('save_work', { work: work.value })
 
-    // setTimeout(() => {
-    //     saveMsg.value = ''
-    //     sendRegEvent(true)
-    // }, 1000)
+    setTimeout(() => {
+        saveMsg.value = ''
+        if (work.value.activity !== '' && work.value.project !== '') {
+            sendRegEvent(true)
+        }
+    }, 1000)
 }
 
 onMounted(async () => {
     user.value = JSON.parse(await invoke('get_user'))
+    work.value = JSON.parse(await invoke('get_work'))
 })
 </script>
 
@@ -105,6 +101,6 @@ input {
 
 button {
     width: 80px;
-    margin: .5em .25em 0 .25em;
+    margin: 0.5em 0.25em 0 0.25em;
 }
 </style>
