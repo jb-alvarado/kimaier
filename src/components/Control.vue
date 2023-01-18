@@ -112,8 +112,8 @@ async function status() {
 async function setState() {
     if (isRunning.value) {
         for (const activity of runningActivities.value) {
-            await fetch(`${user.value.api_url}/api/timesheets/${activity.id}`, {
-                method: 'DELETE',
+            await fetch(`${user.value.api_url}/api/timesheets/${activity.id}/stop`, {
+                method: 'PATCH',
                 headers: new Headers({ 'Content-Type': 'application/json', ...authHeader.value }),
             }).then((response) => {
                 if (response.status === 204) {
