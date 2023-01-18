@@ -3,6 +3,8 @@
     windows_subsystem = "windows"
 )]
 
+use std::process::exit;
+
 use tauri::Manager;
 use tauri::{CustomMenuItem, SystemTray, SystemTrayEvent, SystemTrayMenu, SystemTrayMenuItem};
 use tauri_plugin_positioner::{Position, WindowExt};
@@ -81,6 +83,9 @@ fn main() {
                             item_handle.set_title("Hide").unwrap();
                             let _ = window.move_window(Position::TopRight);
                         }
+                    }
+                    "quit" => {
+                        exit(0);
                     }
                     _ => {}
                 }

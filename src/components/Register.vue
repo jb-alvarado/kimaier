@@ -1,7 +1,7 @@
 <template>
     <div class="container">
         <div class="card">
-            <h4>General</h4>
+            <h4>Settings</h4>
             <input v-model="user.name" placeholder="Name" />
             <input v-model="user.api_pass" type="password" placeholder="API Password" />
             <input v-model="user.api_url" placeholder="API URL" />
@@ -36,6 +36,7 @@ const sendRegEvent = (val: boolean) => emit('reg-event', val)
 const saveMsg = ref('')
 
 async function saveUser() {
+    user.value.api_url = user.value.api_url.replace(/\/+$/, '');
     saveMsg.value = await invoke('save_user', { user: user.value })
     authHeader.value = {
         'X-AUTH-USER': user.value.name,
