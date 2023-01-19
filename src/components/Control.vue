@@ -57,6 +57,7 @@ async function getActivities() {
                 isRunning.value = true
             } else {
                 isRunning.value = false
+                runningActivities.value = []
             }
         })
         .catch(() => {
@@ -116,7 +117,7 @@ async function setState() {
                 method: 'PATCH',
                 headers: new Headers({ 'Content-Type': 'application/json', ...authHeader.value }),
             }).then((response) => {
-                if (response.status === 204) {
+                if (response.status === 200) {
                     isRunning.value = false
                     runningActivities.value = []
                 }
