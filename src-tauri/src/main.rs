@@ -30,6 +30,10 @@ fn main() {
             let win = app.get_window("main").unwrap();
             let _ = win.move_window(Position::TopRight);
 
+            win.listen("tauri://update".to_string(), move |msg| {
+                println!("New version available: {:?}", msg);
+            });
+
             Ok(())
         })
         .manage(config)
