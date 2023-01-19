@@ -8,7 +8,7 @@
     },
     "package": {
         "productName": "kimaier",
-        "version": "0.1.6"
+        "version": "0.1.7"
     },
     "tauri": {
         "allowlist": {
@@ -62,7 +62,7 @@
         "updater": {
             "active": true,
             "endpoints": [
-                "https://github.com/jb-alvarado/kimaier/raw/main/assets/kimaier-latest.json"
+                "https://github.com/jb-alvarado/kimaier/releases/latest/download/latest.json"
             ],
             "dialog": true,
             "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDkyODAyQTVEQTI1RkQwQjYKUldTMjBGK2lYU3FBa2hGNHpoMEFoSHZMaDBpYVZpc3B3RldzTFNQTlJ4eEpDNW5NRWk2Mk5idWsK"
