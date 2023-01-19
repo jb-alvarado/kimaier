@@ -12,6 +12,7 @@ jobs:
       matrix:
         platform: [macos-latest, ubuntu-20.04, windows-latest]
     runs-on: ${{ matrix.platform }}
+    environment: release
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3

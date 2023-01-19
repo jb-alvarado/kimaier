@@ -62,10 +62,10 @@
         "updater": {
             "active": true,
             "endpoints": [
-                "https://releases.myapp.com/{{target}}/{{current_version}}"
+                "https://github.com/jb-alvarado/kimaier/raw/main/assets/kimaier-latest.json"
             ],
             "dialog": true,
-            "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDY2NkM1OTlDMzgxRjEwQzcKUldUSEVCODRuRmxzWnI2bkhHWisxckRJc2xDcXhsZDRiNVZaRk1nelBGcDRKNDJ6QzNDajR6TVQK"
+            "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDkyODAyQTVEQTI1RkQwQjYKUldTMjBGK2lYU3FBa2hGNHpoMEFoSHZMaDBpYVZpc3B3RldzTFNQTlJ4eEpDNW5NRWk2Mk5idWsK"
         },
         "windows": [
             {
