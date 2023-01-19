@@ -1,6 +1,9 @@
 <template>
     <div class="container">
         <div class="card">
+            <p>
+                Kimaier v{{ appVersion }}
+            </p>
             <h4>Settings</h4>
             <input v-model="user.name" placeholder="Name" />
             <input v-model="user.api_pass" type="password" placeholder="API Password" />
@@ -24,6 +27,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
 import { invoke } from '@tauri-apps/api/tauri'
+import { getVersion } from '@tauri-apps/api/app';
 
 import { storeToRefs } from 'pinia'
 import { useMainStore } from '../stores/main'
@@ -32,6 +36,7 @@ const { authHeader, user, work, allActivities } = storeToRefs(useMainStore())
 const mainStore = useMainStore()
 const emit = defineEmits(['reg-event'])
 const sendRegEvent = (val: boolean) => emit('reg-event', val)
+const appVersion = ref();
 
 const saveMsg = ref('')
 
@@ -69,12 +74,21 @@ async function saveWork() {
 }
 
 onMounted(async () => {
+    appVersion.value = await getVersion()
     user.value = JSON.parse(await invoke('get_user'))
     work.value = JSON.parse(await invoke('get_work'))
 })
 </script>
 
 <style scoped>
+.container {
+    padding-top: 1vh;
+}
+
+.card p {
+    font-size: 12px;
+}
+
 h4 {
     margin-top: 0;
     margin-bottom: 0.3em;
