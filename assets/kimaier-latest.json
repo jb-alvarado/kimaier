@@ -1,16 +1,16 @@
 {
-    "version": "v0.1.3",
+    "version": "v0.1.4",
     "notes": "add updater and environment",
-    "pub_date": "2023-01-19T09:00:00Z",
+    "pub_date": "2023-01-19T10:48:21Z",
     "platforms": {
         "darwin-x86_64": {
-            "url": "https://github.com/jb-alvarado/kimaier/releases/download/v0.1.3/kimaier.app.tar.gz"
+            "url": "https://github.com/jb-alvarado/kimaier/releases/download/v0.1.4/kimaier.app.tar.gz"
         },
         "linux-x86_64": {
-            "url": "https://github.com/jb-alvarado/kimaier/releases/download/v0.1.3/kimaier_0.1.3_amd64.AppImage.tar.gz "
+            "url": "https://github.com/jb-alvarado/kimaier/releases/download/v0.1.4/kimaier_0.1.4_amd64.AppImage.tar.gz "
         },
         "windows-x86_64": {
-            "url": "https://github.com/jb-alvarado/kimaier/releases/download/v0.1.3/kimaier_0.1.3_x64_en-US.msi.zip "
+            "url": "https://github.com/jb-alvarado/kimaier/releases/download/v0.1.4/kimaier_0.1.4_x64_en-US.msi.zip "
         }
     }
 }
