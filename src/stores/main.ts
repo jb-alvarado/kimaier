@@ -11,8 +11,6 @@ export const useMainStore = defineStore('main', {
             name: '',
             api_pass: '',
             api_url: '',
-        },
-        work: {
             project: '',
             activity: '',
             project_id: 0,
@@ -35,7 +33,7 @@ export const useMainStore = defineStore('main', {
                     this.allActivities = data
                 })
                 .catch((e) => {
-                    console.log('--- error', e)
+                    alert(e)
                 })
         },
     },

@@ -10,13 +10,13 @@
             <input v-model="user.api_url" placeholder="API URL" />
 
             <div class="work-group">
-                <input v-model="work.project" placeholder="Project" />
-                <input v-model="work.activity" placeholder="Activity" />
+                <input v-model="user.project" placeholder="Project" />
+                <input v-model="user.activity" placeholder="Activity" />
             </div>
 
             <div class="btn-group">
                 <button type="button" @click="sendRegEvent(true)">Cancel</button>
-                <button type="button" @click="saveUser()">Save</button>
+                <button type="button" @click="saveSettings()">Save</button>
             </div>
         </div>
 
@@ -32,42 +32,40 @@ import { getVersion } from '@tauri-apps/api/app';
 import { storeToRefs } from 'pinia'
 import { useMainStore } from '../stores/main'
 
-const { authHeader, user, work, allActivities } = storeToRefs(useMainStore())
+const { authHeader, user, allActivities } = storeToRefs(useMainStore())
 const mainStore = useMainStore()
+
 const emit = defineEmits(['reg-event'])
 const sendRegEvent = (val: boolean) => emit('reg-event', val)
-const appVersion = ref();
 
+const appVersion = ref();
 const saveMsg = ref('')
 
-async function saveUser() {
-    user.value.api_url = user.value.api_url.replace(/\/+$/, '')
-    await invoke('save_user', { user: user.value })
+async function saveSettings() {
     authHeader.value = {
         'X-AUTH-USER': user.value.name,
         'X-AUTH-TOKEN': user.value.api_pass,
     }
 
-    await mainStore.setActivities()
-    await saveWork()
-}
+    user.value.api_url = user.value.api_url.replace(/\/+$/, '')
 
-async function saveWork() {
+    await mainStore.setActivities()
+
     for (const activity of allActivities.value) {
-        if (activity.parentTitle && activity.parentTitle.toLowerCase() === work.value.project.toLocaleLowerCase()) {
-            work.value.project_id = activity.project
+        if (activity.parentTitle && activity.parentTitle.toLowerCase() === user.value.project.toLocaleLowerCase()) {
+            user.value.project_id = activity.project
         }
 
-        if (activity.name.toLowerCase() === work.value.activity.toLocaleLowerCase()) {
-            work.value.activity_id = activity.id
+        if (activity.name.toLowerCase() === user.value.activity.toLocaleLowerCase()) {
+            user.value.activity_id = activity.id
         }
     }
 
-    saveMsg.value = await invoke('save_work', { work: work.value })
+    saveMsg.value = await invoke('save_settings', { user: user.value })
 
     setTimeout(() => {
         saveMsg.value = ''
-        if (work.value.activity !== '' && work.value.project !== '') {
+        if (user.value.activity !== '' && user.value.project !== '') {
             sendRegEvent(true)
         }
     }, 1000)

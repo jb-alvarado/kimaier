@@ -38,7 +38,7 @@ dayjs.extend(utc)
 dayjs.extend(timezone)
 dayjs.extend(customParseFormat)
 
-const { user, work, authHeader, isRunning } = storeToRefs(useMainStore())
+const { user, authHeader, isRunning } = storeToRefs(useMainStore())
 const emit = defineEmits(['reg-event'])
 const sendRegEvent = (val: boolean) => emit('reg-event', val)
 
@@ -130,8 +130,8 @@ async function setState() {
             body: JSON.stringify({
                 begin: dayjs(),
                 end: '',
-                project: work.value.project_id,
-                activity: work.value.activity_id,
+                project: user.value.project_id,
+                activity: user.value.activity_id,
                 description: '',
                 tags: '',
             }),

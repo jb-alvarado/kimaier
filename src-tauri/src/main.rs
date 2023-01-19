@@ -11,7 +11,7 @@ use tauri_plugin_positioner::{Position, WindowExt};
 
 pub mod utils;
 
-use utils::{get_user, get_work, greet, read_config, read_user, read_work, save_user, save_work};
+use utils::{get_settings, read_settings, save_settings};
 
 fn main() {
     let quit = CustomMenuItem::new("quit".to_string(), "Quit");
@@ -21,9 +21,7 @@ fn main() {
         .add_native_item(SystemTrayMenuItem::Separator)
         .add_item(hide);
     let system_tray = SystemTray::new().with_menu(tray_menu);
-    let config = read_config();
-    let user = read_user();
-    let work = read_work();
+    let settings = read_settings();
 
     tauri::Builder::default()
         .setup(|app| {
@@ -32,12 +30,8 @@ fn main() {
 
             Ok(())
         })
-        .manage(config)
-        .manage(user)
-        .manage(work)
-        .invoke_handler(tauri::generate_handler![
-            greet, get_user, get_work, save_user, save_work
-        ])
+        .manage(settings)
+        .invoke_handler(tauri::generate_handler![get_settings, save_settings])
         .system_tray(system_tray)
         .on_window_event(|event| match event.event() {
             tauri::WindowEvent::CloseRequested { api, .. } => {

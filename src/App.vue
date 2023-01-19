@@ -14,30 +14,30 @@ import { invoke } from '@tauri-apps/api/tauri'
 import { storeToRefs } from 'pinia'
 import { useMainStore } from './stores/main'
 
-const { authHeader, user, work } = storeToRefs(useMainStore())
+const { authHeader, user } = storeToRefs(useMainStore())
 const setRegister = (val: boolean) => (isRegister.value = val)
 
 const isRegister = ref(false)
 
 onMounted(async () => {
-    user.value = JSON.parse(await invoke('get_user'))
-    work.value = JSON.parse(await invoke('get_work'))
+    user.value = JSON.parse(await invoke('get_settings'))
+
+    console.log(' --- user', user)
 
     if (
-        user.value.name === '' ||
-        user.value.api_pass === '' ||
-        user.value.api_url === '' ||
-        work.value.activity_id === 0
+    user.value.name === '' ||
+    user.value.api_pass === '' ||
+    user.value.api_url === '' ||
+    user.value.activity_id === 0
     ) {
         isRegister.value = false
     } else {
         isRegister.value = true
 
         authHeader.value = {
-            "X-AUTH-USER": user.value.name,
-            "X-AUTH-TOKEN": user.value.api_pass
+            'X-AUTH-USER': user.value.name,
+            'X-AUTH-TOKEN': user.value.api_pass,
         }
     }
 })
 </script>
-
