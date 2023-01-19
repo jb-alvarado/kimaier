@@ -5,10 +5,10 @@ use serde::{Deserialize, Serialize};
 
 const APP_INFO: AppInfo = AppInfo {
     name: "Kimaier",
-    author: "Jonathan Baecker <jonbae77@gmail.com>",
+    author: "Jonathan Baecker",
 };
 
-const CONFIG_PATH: &str = "config/kimaier";
+const CONFIG_PATH: &str = "config/kimaier/kimaier";
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct User {

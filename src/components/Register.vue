@@ -75,8 +75,6 @@ async function saveWork() {
 
 onMounted(async () => {
     appVersion.value = await getVersion()
-    user.value = JSON.parse(await invoke('get_user'))
-    work.value = JSON.parse(await invoke('get_work'))
 })
 </script>
 
