@@ -12,9 +12,6 @@ jobs:
             matrix:
                 platform: [macos-latest, ubuntu-20.04, windows-latest]
         runs-on: ${{ matrix.platform }}
-        environment: release
-        env:
-            TAURI_PRIVATE_KEY: ${{ secrets.TAURI_PRIVATE_KEY }}
         steps:
             - name: Checkout repository
               uses: actions/checkout@v3
@@ -47,9 +44,12 @@ jobs:
 
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                  TAURI_PRIVATE_KEY: ${{ secrets.TAURI_PRIVATE_KEY }}
               with:
                   tagName: ${{ github.ref_name }} # This only works if your workflow triggers on new tags.
                   releaseName: 'Kimaier v__VERSION__' # tauri-action replaces \_\_VERSION\_\_ with the app version.
-                  releaseBody: 'See the assets to download and install this version.'
+                  releaseBody: |
+                    ${{ steps.build_changelog.outputs.changelog }}
+                    See the assets to download this version.
                   releaseDraft: true
                   prerelease: false
