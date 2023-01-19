@@ -15,7 +15,7 @@ tauri-build = { version = "1.2", features = [] }
 
 [dependencies]
 preferences = { git = "https://github.com/jb-alvarado/preferences-rs.git" }
-reqwest = { version = "0.11", features = ["blocking", "json"] }
+# reqwest = { version = "0.11", features = ["blocking", "json"] }
 serde_json = "1"
 serde = { version = "1.0", features = ["derive"] }
 tauri = { version = "1.2", features = ["shell-open", "system-tray", "updater"] }
