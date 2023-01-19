@@ -1,19 +1,19 @@
 {
-    "version": "v0.1.4",
+    "version": "v0.1.5",
     "notes": "add updater and environment",
     "pub_date": "2023-01-19T10:48:21Z",
     "platforms": {
         "darwin-x86_64": {
-            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTMjBGK2lYU3FBa20rMzF2MVhyTVNwamVhMDIvWm0yQmFiZDhlMG5XTEtUMzZ6Zk0vRE05dTVkbElRMXg3L0Yxeit2U2VkenJDMExORUQxUllTWWNtakdEQkJFYjVvTmdNPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNjc0MTIyMjkyCWZpbGU6a2ltYWllci5hcHAudGFyLmd6CkJjeUdBVkFTQWJscGJYb2duV1pRZ1ZsdFpqTnhIRnVvMk12S1M0Z1labjE3SS8zWUQ4S0dpaHBWVGVObVdDcFNxQTh5aGhyWUY3NkMwU05IcGcxMkN3PT0K",
-            "url": "https://github.com/jb-alvarado/kimaier/releases/download/v0.1.4/kimaier.app.tar.gz"
+            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTMjBGK2lYU3FBa3VweW44QTNMYnpjNW9rdW5ZSld4dWNFTk4yTWQ5ekExNHU4eVlVOVQ0VWpIUTlURVBQNzRmKzBmUnZPS1VCcTNjM01IN3pnVHdxeW8xSEJmOXN0MndBPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNjc0MTI2MjA0CWZpbGU6a2ltYWllci5hcHAudGFyLmd6CjBSRUh0RUhYNTB5bGN0QVdwUUpYZitBek1ueHJQNStZeVVucXlsOEQrbFV6YW1TUHU4dUt6QWkyM0pHWmtPNERMNmhPVEQxZS9pd0xxY1BMN1k0MkRRPT0K",
+            "url": "https://github.com/jb-alvarado/kimaier/releases/download/v0.1.5/kimaier.app.tar.gz"
         },
         "linux-x86_64": {
-            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTMjBGK2lYU3FBa3NXS2RHdHVmQW56UzQwRjRNdHJFUHRIUUIrVEt3UW1FNnJnZzJDV1k2ZEFJaldLL25SWWhTc25xQWRYSlBwSmhPVGF6WVB1UmQ2dTBPL2hDbHdXR0EwPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNjc0MTIyMjc3CWZpbGU6a2ltYWllcl8wLjEuNF9hbWQ2NC5BcHBJbWFnZS50YXIuZ3oKalVuVnpMMGc5UEljdGRMZHhIT0FHLzgzR0dkTHBUN1lMT3VWeXhmUXpGbk5nSlpabjFGQUNkM0hoazlhV0xsNjU5SHA2Q1RPVFBYVHNIbUxuWVN2RFE9PQo=",
-            "url": "https://github.com/jb-alvarado/kimaier/releases/download/v0.1.4/kimaier_0.1.4_amd64.AppImage.tar.gz "
+            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTMjBGK2lYU3FBa3F0djNPRGFkK2JlYngrUEpZNzUzUDM3UmlMeEVFZDlpejFnaFZZMjE0NHdNRFZrZmZBaGgzKzFkRnhGSVdHZi9FTDJhOXdtTEx0WThzaHduZEIwc1FvPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNjc0MTI2MjYxCWZpbGU6a2ltYWllcl8wLjEuNV9hbWQ2NC5BcHBJbWFnZS50YXIuZ3oKRm9hS1IvS0tjdEpzeXNrNnBBL1RYK3ZGYzhMN1h0V204WkxGSFJuNGVYQ1YzS0c4c3NpWjV6MUxqM3ZRVHFkMHVlUWNsSytXd3NQRU1IV2Y1LzlZQWc9PQo=",
+            "url": "https://github.com/jb-alvarado/kimaier/releases/download/v0.1.5/kimaier_0.1.5_amd64.AppImage.tar.gz "
         },
         "windows-x86_64": {
-            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTMjBGK2lYU3FBa2dFS0NYUHk5MHVSOG5pWFMyZzNTMGZ2Tk5uWDkxNXJMOUZ5NXA2VzdUYXJHZWwza3h1Q3hqOW9BL1Z6QjROTFcvU2o4VGJFajBrN3pGQlFOTkhMUEFJPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNjc0MTIyNTQ2CWZpbGU6a2ltYWllcl8wLjEuNF94NjRfZW4tVVMubXNpLnppcApvZTVzNzVSbmx6ZHhVdnJ0dXpsVENXQVZTdG1YMytNNUZmZ3h0ZU5RNXlmQlRHU1k1aU5iUzNqQ2dFTTVzbWhKNE1ReDlZTW1mcmVoZktkSkxjTDNEQT09Cg==",
-            "url": "https://github.com/jb-alvarado/kimaier/releases/download/v0.1.4/kimaier_0.1.4_x64_en-US.msi.zip "
+            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTMjBGK2lYU3FBa29Jb0JBNE1tSzR4L2JPNk8rYkkvUzc4RUxsclBPNDlSbGJMbFVuSU05MDJnSlpqdXBtTURxK2IwTDN5dThCSFpYb2JQT1BCbGk2d2Z1SzZ1N04zUndzPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNjc0MTI2NTc1CWZpbGU6a2ltYWllcl8wLjEuNV94NjRfZW4tVVMubXNpLnppcApPQUhBaGczUG1uTWxwM04zZjE1N2RweGJtSWgwSnMvRSsyN1MyaXVMbTJyMXo5ZGoxL1FHQ3JRcktMMncrd3VtN0gxRlV4RHFuZXJ0Vm9MdWRkK3BEZz09Cg==",
+            "url": "https://github.com/jb-alvarado/kimaier/releases/download/v0.1.5/kimaier_0.1.5_x64_en-US.msi.zip "
         }
     }
 }
