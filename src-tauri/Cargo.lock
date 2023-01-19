@@ -39,6 +39,18 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "2cb2f989d18dd141ab8ae82f64d1a8cdd37e0840f73a406896cf5e99502fab61"
 
 [[package]]
+name = "app_dirs2"
+version = "2.5.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "47a8d2d8dbda5fca0a522259fb88e4f55d2b10ad39f5f03adeebf85031eba501"
+dependencies = [
+ "jni 0.19.0",
+ "ndk-context",
+ "winapi",
+ "xdg",
+]
+
+[[package]]
 name = "atk"
 version = "0.15.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -500,10 +512,10 @@ dependencies = [
 ]
 
 [[package]]
-name = "directories"
-version = "4.0.1"
+name = "dirs"
+version = "4.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f51c5d4ddabd36886dd3e1438cb358cdcb0d7c499cb99cb4ac2e38e18b5cb210"
+checksum = "ca3aa72a6f96ea37bbc5aa912f6788242832f75369bdfdadcb0e38423f100059"
 dependencies = [
  "dirs-sys",
 ]
@@ -1191,6 +1203,20 @@ dependencies = [
  "gobject-sys",
  "libc",
  "system-deps 5.0.0",
+]
+
+[[package]]
+name = "jni"
+version = "0.19.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "c6df18c2e3db7e453d3c6ac5b3e9d5182664d28788126d39b91f2d1e22b017ec"
+dependencies = [
+ "cesu8",
+ "combine",
+ "jni-sys",
+ "log",
+ "thiserror",
+ "walkdir",
 ]
 
 [[package]]
@@ -1941,10 +1967,10 @@ checksum = "925383efa346730478fb4838dbe9137d2a47675ad789c546d150a6e1dd4ab31c"
 
 [[package]]
 name = "preferences"
-version = "2.0.0"
-source = "git+https://github.com/jb-alvarado/preferences-rs.git#df43b766c03defffc509b1990dc1a5965ac7a917"
+version = "3.0.0"
+source = "git+https://github.com/jb-alvarado/preferences-rs.git#a845b1e4334e1acccf69a00284a4a96e4f10a205"
 dependencies = [
- "directories",
+ "app_dirs2",
  "serde",
  "serde_json",
 ]
@@ -2648,7 +2674,7 @@ dependencies = [
  "gtk",
  "image",
  "instant",
- "jni",
+ "jni 0.20.0",
  "lazy_static",
  "libappindicator",
  "libc",
@@ -3650,6 +3676,15 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "6d1526bbe5aaeb5eb06885f4d987bcdfa5e23187055de9b83fe00156a821fabc"
 dependencies = [
  "libc",
+]
+
+[[package]]
+name = "xdg"
+version = "2.4.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "0c4583db5cbd4c4c0303df2d15af80f0539db703fa1c68802d4cbbd2dd0f88f6"
+dependencies = [
+ "dirs",
 ]
 
 [[package]]
