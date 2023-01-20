@@ -12,7 +12,7 @@
         <p class="timer">{{ secToHMS(timer) }}</p>
 
         <div class="footer">
-            <button class="settings-button" type="button" @click="sendRegEvent(false)">
+            <button class="settings-button" type="button" @click="isRegister = false">
                 <i class="fa-solid fa-gear"></i>
             </button>
             <div class="spacer"></div>
@@ -38,9 +38,7 @@ dayjs.extend(utc)
 dayjs.extend(timezone)
 dayjs.extend(customParseFormat)
 
-const { user, authHeader, isRunning } = storeToRefs(useMainStore())
-const emit = defineEmits(['reg-event'])
-const sendRegEvent = (val: boolean) => emit('reg-event', val)
+const { user, authHeader, isRegister, isRunning } = storeToRefs(useMainStore())
 
 const timer = ref(0)
 const runningActivities = ref([] as any[])
@@ -189,5 +187,4 @@ onMounted(() => {
     font-size: 24px;
     margin: 1.5em 0 0.5em 0;
 }
-
 </style>

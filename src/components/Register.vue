@@ -1,23 +1,20 @@
 <template>
     <div class="container">
         <div class="card">
-            <p>
-                Kimaier v{{ appVersion }}
-            </p>
+            <p>Kimaier v{{ appVersion }}</p>
             <h4>Settings</h4>
-            <input v-model="user.name" placeholder="Name" />
-            <input v-model="user.api_pass" type="password" placeholder="API Password" />
-            <input v-model="user.api_url" placeholder="API URL" />
+            <form @submit.prevent="saveSettings()" @reset="isRegister = true">
+                <input v-model="user.name" placeholder="Name" required />
+                <input v-model="user.api_pass" type="password" placeholder="API Password" required />
+                <input v-model="user.api_url" placeholder="API URL" required />
+                <input v-model="user.project" placeholder="Project" required />
+                <input v-model="user.activity" placeholder="Activity" required />
 
-            <div class="work-group">
-                <input v-model="user.project" placeholder="Project" />
-                <input v-model="user.activity" placeholder="Activity" />
-            </div>
-
-            <div class="btn-group">
-                <button type="button" @click="sendRegEvent(true)">Cancel</button>
-                <button type="button" @click="saveSettings()">Save</button>
-            </div>
+                <div class="btn-group">
+                    <button type="reset">Cancel</button>
+                    <button type="submit">Save</button>
+                </div>
+            </form>
         </div>
 
         <p>{{ saveMsg }}</p>
@@ -26,28 +23,23 @@
 
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
-import { invoke } from '@tauri-apps/api/tauri'
-import { getVersion } from '@tauri-apps/api/app';
+import { getVersion } from '@tauri-apps/api/app'
 
 import { storeToRefs } from 'pinia'
 import { useMainStore } from '../stores/main'
 
-const { authHeader, user, allActivities } = storeToRefs(useMainStore())
+const { allActivities, authHeader, isRegister, user } = storeToRefs(useMainStore())
 const mainStore = useMainStore()
 
-const emit = defineEmits(['reg-event'])
-const sendRegEvent = (val: boolean) => emit('reg-event', val)
-
-const appVersion = ref();
+const appVersion = ref()
 const saveMsg = ref('')
 
 async function saveSettings() {
+    user.value.api_url = user.value.api_url.replace(/\/+$/, '')
     authHeader.value = {
         'X-AUTH-USER': user.value.name,
         'X-AUTH-TOKEN': user.value.api_pass,
     }
-
-    user.value.api_url = user.value.api_url.replace(/\/+$/, '')
 
     await mainStore.setActivities()
 
@@ -61,12 +53,12 @@ async function saveSettings() {
         }
     }
 
-    saveMsg.value = await invoke('save_settings', { user: user.value })
+    await mainStore.setStore()
 
     setTimeout(() => {
         saveMsg.value = ''
         if (user.value.activity !== '' && user.value.project !== '') {
-            sendRegEvent(true)
+            isRegister.value = true
         }
     }, 1000)
 }
@@ -88,10 +80,6 @@ onMounted(async () => {
 h4 {
     margin-top: 0;
     margin-bottom: 0.3em;
-}
-
-.work-group h4 {
-    margin-top: 1em;
 }
 
 .card {

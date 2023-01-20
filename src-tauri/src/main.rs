@@ -9,10 +9,6 @@ use tauri::Manager;
 use tauri::{CustomMenuItem, SystemTray, SystemTrayEvent, SystemTrayMenu, SystemTrayMenuItem};
 use tauri_plugin_positioner::{Position, WindowExt};
 
-pub mod utils;
-
-use utils::{get_settings, read_settings, save_settings};
-
 fn main() {
     let quit = CustomMenuItem::new("quit".to_string(), "Quit");
     let hide = CustomMenuItem::new("hide".to_string(), "Hide");
@@ -21,7 +17,6 @@ fn main() {
         .add_native_item(SystemTrayMenuItem::Separator)
         .add_item(hide);
     let system_tray = SystemTray::new().with_menu(tray_menu);
-    let settings = read_settings();
 
     tauri::Builder::default()
         .setup(|app| {
@@ -30,8 +25,7 @@ fn main() {
 
             Ok(())
         })
-        .manage(settings)
-        .invoke_handler(tauri::generate_handler![get_settings, save_settings])
+        .plugin(tauri_plugin_store::Builder::default().build())
         .system_tray(system_tray)
         .on_window_event(|event| match event.event() {
             tauri::WindowEvent::CloseRequested { api, .. } => {
