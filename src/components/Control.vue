@@ -1,11 +1,13 @@
 <template>
     <div class="container">
         <div class="card">
-            <button v-if="isRunning" id="control-button" type="button" @click="setState()">
-                <i class="fa-regular fa-circle-pause"></i>
-            </button>
-            <button v-else id="control-button" type="button" @click="setState()">
-                <i class="fa-regular fa-circle-play"></i>
+            <button id="control-button" type="button" @click="setState()">
+                <div v-if="isRunning">
+                    <i class="fa-regular fa-circle-pause"></i>
+                </div>
+                <div v-else>
+                    <i class="fa-regular fa-circle-play"></i>
+                </div>
             </button>
         </div>
 
