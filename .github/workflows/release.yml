@@ -26,7 +26,7 @@ jobs:
                   configurationJson: |
                       { "categories": [
                               {
-                                  "title": "## 📦 Changes",
+                                  "title": "## 📦 Uncategorized",
                                   "labels": []
                               }
                           ],

@@ -3,12 +3,13 @@
         <div class="card">
             <p>Kimaier v{{ appVersion }}</p>
             <h4>Settings</h4>
-            <form @submit.prevent="saveSettings()" @reset="isRegister = true">
+            <form @submit.prevent="saveSettings()" @reset="currentPage = page.Control">
                 <input v-model="user.name" placeholder="Name" required />
                 <input v-model="user.api_pass" type="password" placeholder="API Password" required />
                 <input v-model="user.api_url" placeholder="API URL" required />
                 <input v-model="user.project" placeholder="Project" required />
                 <input v-model="user.activity" placeholder="Activity" required />
+                <input v-model="user.week_hours" placeholder="Hours per Week" type="number" required />
 
                 <div class="btn-group">
                     <button type="reset">Cancel</button>
@@ -28,7 +29,7 @@ import { getVersion } from '@tauri-apps/api/app'
 import { storeToRefs } from 'pinia'
 import { useMainStore } from '../stores/main'
 
-const { allActivities, authHeader, isRegister, user } = storeToRefs(useMainStore())
+const { allActivities, authHeader, currentPage, page, user } = storeToRefs(useMainStore())
 const mainStore = useMainStore()
 
 const appVersion = ref()
@@ -58,7 +59,7 @@ async function saveSettings() {
     setTimeout(() => {
         saveMsg.value = ''
         if (user.value.activity !== '' && user.value.project !== '') {
-            isRegister.value = true
+            currentPage.value = page.value.Control
         }
     }, 1000)
 }
@@ -101,4 +102,11 @@ button {
     width: 80px;
     margin: 0.5em 0.25em 0 0.25em;
 }
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
 </style>

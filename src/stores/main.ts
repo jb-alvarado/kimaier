@@ -1,9 +1,22 @@
+import dayjs from 'dayjs'
+import utc from 'dayjs/plugin/utc.js'
+import timezone from 'dayjs/plugin/timezone.js'
+
 import { defineStore } from 'pinia'
 import { Store } from 'tauri-plugin-store-api'
+
+dayjs.extend(utc)
+dayjs.extend(timezone)
 
 interface Header {
     'X-AUTH-USER': string
     'X-AUTH-TOKEN': string
+}
+
+enum Page {
+    Control,
+    Settings,
+    Statistics,
 }
 
 interface User {
@@ -12,6 +25,7 @@ interface User {
     api_url: string
     project: string
     activity: string
+    week_hours: number
     project_id: number
     activity_id: number
 }
@@ -19,19 +33,29 @@ interface User {
 export const useMainStore = defineStore('main', {
     state: () => ({
         store: new Store('kimaier.dat'),
+        page: Page,
         user: {
             name: '',
             api_pass: '',
             api_url: '',
             project: '',
             activity: '',
+            week_hours: 0,
             project_id: 0,
             activity_id: 0,
         } as User,
         allActivities: [] as any[],
         authHeader: {} as Header,
-        isRegister: false,
-        isRunning: false,
+        currentPage: Page.Settings,
+        isRunning: null as boolean | null,
+        timeCurrent: 0,
+        timeToday: 0,
+        timeMonth: 0,
+        targetHours: 0,
+        timeLeft: 0,
+        runningActivity: [] as any[],
+        todaysActivities: [] as any[],
+        monthActivities: [] as any[],
     }),
     getters: {},
 
@@ -40,15 +64,14 @@ export const useMainStore = defineStore('main', {
             await this.store
                 .get('user')
                 .then((data: any) => {
-                    console.log(data.name)
                     this.user = data
-                    this.isRegister = true
+                    this.currentPage = Page.Control
                     this.authHeader = {
                         'X-AUTH-USER': data.name,
                         'X-AUTH-TOKEN': data.api_pass,
                     }
                 })
-                .catch(() => (this.isRegister = false))
+                .catch(() => (this.currentPage = Page.Settings))
         },
 
         async setStore() {
@@ -57,6 +80,27 @@ export const useMainStore = defineStore('main', {
                     this.store.save()
                 }, 100)
             })
+        },
+
+        async getActiveActivity() {
+            await fetch(`${this.user.api_url}/api/timesheets/active`, {
+                method: 'GET',
+                headers: new Headers({ 'Content-Type': 'application/json', ...this.authHeader }),
+            })
+                .then((response) => response.json())
+                .then((data) => {
+                    if (data && data.length > 0) {
+                        this.runningActivity = data
+                        this.isRunning = true
+                    } else {
+                        this.isRunning = false
+                        this.runningActivity = []
+                    }
+                })
+                .catch(() => {
+                    this.isRunning = false
+                    this.runningActivity = []
+                })
         },
 
         async setActivities() {

@@ -73,6 +73,11 @@ button {
     outline: none;
 }
 
+.timer {
+    font-size: 24px;
+    margin: 1.5em 0 0.5em 0;
+}
+
 @media (prefers-color-scheme: dark) {
     :root {
         color: #f6f6f6;

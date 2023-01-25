@@ -2,7 +2,7 @@
     <div class="container">
         <div class="card">
             <button id="control-button" type="button" @click="setState()">
-                <div v-if="isRunning" class="circle-pause">
+                <div v-if="isRunning === true" class="circle-pause">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
                         <!--! Font Awesome Free 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. -->
                         <path
@@ -10,7 +10,7 @@
                         />
                     </svg>
                 </div>
-                <div v-else class="circle-play">
+                <div v-else-if="isRunning === false" class="circle-play">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
                         <!--! Font Awesome Free 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. -->
                         <path
@@ -21,27 +21,9 @@
             </button>
         </div>
 
-        <p class="timer">{{ secToHMS(timer) }}</p>
+        <p class="timer">{{ helper.secToHMS(timeCurrent) }}</p>
 
-        <div class="footer">
-            <a href="#" class="settings-button" @click="isRegister = false">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-                    <!--! Font Awesome Free 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. -->
-                    <path
-                        d="M495.9 166.6c3.2 8.7 .5 18.4-6.4 24.6l-43.3 39.4c1.1 8.3 1.7 16.8 1.7 25.4s-.6 17.1-1.7 25.4l43.3 39.4c6.9 6.2 9.6 15.9 6.4 24.6c-4.4 11.9-9.7 23.3-15.8 34.3l-4.7 8.1c-6.6 11-14 21.4-22.1 31.2c-5.9 7.2-15.7 9.6-24.5 6.8l-55.7-17.7c-13.4 10.3-28.2 18.9-44 25.4l-12.5 57.1c-2 9.1-9 16.3-18.2 17.8c-13.8 2.3-28 3.5-42.5 3.5s-28.7-1.2-42.5-3.5c-9.2-1.5-16.2-8.7-18.2-17.8l-12.5-57.1c-15.8-6.5-30.6-15.1-44-25.4L83.1 425.9c-8.8 2.8-18.6 .3-24.5-6.8c-8.1-9.8-15.5-20.2-22.1-31.2l-4.7-8.1c-6.1-11-11.4-22.4-15.8-34.3c-3.2-8.7-.5-18.4 6.4-24.6l43.3-39.4C64.6 273.1 64 264.6 64 256s.6-17.1 1.7-25.4L22.4 191.2c-6.9-6.2-9.6-15.9-6.4-24.6c4.4-11.9 9.7-23.3 15.8-34.3l4.7-8.1c6.6-11 14-21.4 22.1-31.2c5.9-7.2 15.7-9.6 24.5-6.8l55.7 17.7c13.4-10.3 28.2-18.9 44-25.4l12.5-57.1c2-9.1 9-16.3 18.2-17.8C227.3 1.2 241.5 0 256 0s28.7 1.2 42.5 3.5c9.2 1.5 16.2 8.7 18.2 17.8l12.5 57.1c15.8 6.5 30.6 15.1 44 25.4l55.7-17.7c8.8-2.8 18.6-.3 24.5 6.8c8.1 9.8 15.5 20.2 22.1 31.2l4.7 8.1c6.1 11 11.4 22.4 15.8 34.3zM256 336c44.2 0 80-35.8 80-80s-35.8-80-80-80s-80 35.8-80 80s35.8 80 80 80z"
-                    />
-                </svg>
-            </a>
-            <div class="spacer"></div>
-            <a :href="user.api_url" class="settings-button" target="_blank">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512">
-                    <!--! Font Awesome Free 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. -->
-                    <path
-                        d="M365.3 93.38l-74.63-74.64C278.6 6.742 262.3 0 245.4 0L64-.0001c-35.35 0-64 28.65-64 64l.0065 384c0 35.34 28.65 64 64 64H320c35.2 0 64-28.8 64-64V138.6C384 121.7 377.3 105.4 365.3 93.38zM336 448c0 8.836-7.164 16-16 16H64.02c-8.838 0-16-7.164-16-16L48 64.13c0-8.836 7.164-16 16-16h160L224 128c0 17.67 14.33 32 32 32h79.1V448zM96 280C96 293.3 106.8 304 120 304h144C277.3 304 288 293.3 288 280S277.3 256 264 256h-144C106.8 256 96 266.8 96 280zM264 352h-144C106.8 352 96 362.8 96 376s10.75 24 24 24h144c13.25 0 24-10.75 24-24S277.3 352 264 352z"
-                    />
-                </svg>
-            </a>
-        </div>
+        <Footer />
     </div>
 </template>
 
@@ -50,67 +32,35 @@ import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc.js'
 import timezone from 'dayjs/plugin/timezone.js'
 import customParseFormat from 'dayjs/plugin/customParseFormat'
-import { onMounted, ref } from 'vue'
+import { onMounted, onBeforeUnmount, ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useMainStore } from '../stores/main'
+import Footer from './Footer.vue'
+import helper from '../helpers/helper'
 
 dayjs.extend(utc)
 dayjs.extend(timezone)
 dayjs.extend(customParseFormat)
 
-const { user, authHeader, isRegister, isRunning } = storeToRefs(useMainStore())
+const { user, authHeader, isRunning, timeCurrent, runningActivity } = storeToRefs(useMainStore())
+const mainStore = useMainStore()
 
-const timer = ref(0)
-const runningActivities = ref([] as any[])
-
-async function getActivities() {
-    await fetch(`${user.value.api_url}/api/timesheets/active`, {
-        method: 'GET',
-        headers: new Headers({ 'Content-Type': 'application/json', ...authHeader.value }),
-    })
-        .then((response) => response.json())
-        .then((data) => {
-            if (data && data.length > 0) {
-                runningActivities.value = data
-                isRunning.value = true
-            } else {
-                isRunning.value = false
-                runningActivities.value = []
-            }
-        })
-        .catch(() => {
-            isRunning.value = false
-            runningActivities.value = []
-        })
-}
-
-function secToHMS(sec: number) {
-    let hours = Math.floor(sec / 3600)
-    sec %= 3600
-    let minutes = Math.floor(sec / 60)
-    let seconds = Math.round(sec % 60)
-
-    const m = String(minutes).padStart(2, '0')
-    const h = String(hours).padStart(2, '0')
-    const s = String(seconds).padStart(2, '0')
-
-    return `${h}:${m}:${s}`
-}
+const controlTimeout = ref()
 
 function setTimer(time: any) {
-    if (runningActivities.value.length === 0 && timer.value !== 0) {
-        timer.value = 0
+    if (runningActivity.value.length === 0 && timeCurrent.value !== 0) {
+        timeCurrent.value = 0
     }
 
-    for (const act of runningActivities.value) {
+    for (const act of runningActivity.value) {
         const begin = dayjs(act.begin, 'YYYY-MM-DDTHH:mm:ss+000ZZ')
         const diff = time.diff(begin, 'second')
-        timer.value = diff
+        timeCurrent.value = diff
     }
 }
 
 async function status() {
-    await getActivities()
+    await mainStore.getActiveActivity()
 
     async function setStatus(resolve: any) {
         /*
@@ -120,24 +70,24 @@ async function status() {
         setTimer(time)
 
         if (time.unix() % 60 === 0) {
-            await getActivities()
+            await mainStore.getActiveActivity()
         }
 
-        setTimeout(() => setStatus(resolve), 1000)
+        controlTimeout.value = setTimeout(() => setStatus(resolve), 1000)
     }
     return new Promise((resolve) => setStatus(resolve))
 }
 
 async function setState() {
     if (isRunning.value) {
-        for (const activity of runningActivities.value) {
+        for (const activity of runningActivity.value) {
             await fetch(`${user.value.api_url}/api/timesheets/${activity.id}/stop`, {
                 method: 'PATCH',
                 headers: new Headers({ 'Content-Type': 'application/json', ...authHeader.value }),
             }).then((response) => {
                 if (response.status === 200) {
                     isRunning.value = false
-                    runningActivities.value = []
+                    runningActivity.value = []
                 }
             })
         }
@@ -156,7 +106,7 @@ async function setState() {
         }).then(async (response) => {
             if (response.status === 200) {
                 isRunning.value = true
-                await getActivities()
+                await mainStore.getActiveActivity()
             }
         })
     }
@@ -164,6 +114,10 @@ async function setState() {
 
 onMounted(() => {
     status()
+})
+
+onBeforeUnmount(() => {
+    clearTimeout(controlTimeout.value)
 })
 </script>
 
@@ -186,39 +140,5 @@ onMounted(() => {
 }
 .circle-pause svg {
     fill: orange;
-}
-
-.footer {
-    display: table;
-    text-align: center;
-    width: 100%;
-}
-
-.spacer {
-    display: table-cell;
-}
-
-.settings-button {
-    display: inline-block;
-    border-radius: 50%;
-    width: 38px;
-    height: 38px;
-    line-height: 38px;
-}
-
-.settings-button:hover {
-    border-color: #396cd8;
-}
-
-.settings-button svg {
-    width: 25px;
-    height: 25px;
-    fill: gray;
-    vertical-align: middle;
-}
-
-.timer {
-    font-size: 24px;
-    margin: 1.5em 0 0.5em 0;
 }
 </style>

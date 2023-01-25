@@ -27,12 +27,11 @@ fn main() {
         })
         .plugin(tauri_plugin_store::Builder::default().build())
         .system_tray(system_tray)
-        .on_window_event(|event| match event.event() {
-            tauri::WindowEvent::CloseRequested { api, .. } => {
+        .on_window_event(|event| {
+            if let tauri::WindowEvent::CloseRequested { api, .. } = event.event() {
                 event.window().hide().unwrap();
                 api.prevent_close();
             }
-            _ => {}
         })
         .on_system_tray_event(|app, event| match event {
             SystemTrayEvent::DoubleClick {
