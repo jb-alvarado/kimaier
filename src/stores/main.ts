@@ -64,11 +64,13 @@ export const useMainStore = defineStore('main', {
             await this.store
                 .get('user')
                 .then((data: any) => {
-                    this.user = data
-                    this.currentPage = Page.Control
-                    this.authHeader = {
-                        'X-AUTH-USER': data.name,
-                        'X-AUTH-TOKEN': data.api_pass,
+                    if (data) {
+                        this.user = data
+                        this.currentPage = Page.Control
+                        this.authHeader = {
+                            'X-AUTH-USER': data.name,
+                            'X-AUTH-TOKEN': data.api_pass,
+                        }
                     }
                 })
                 .catch(() => (this.currentPage = Page.Settings))

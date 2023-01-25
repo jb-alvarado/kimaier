@@ -20,8 +20,13 @@ const mainStore = useMainStore()
 
 onMounted(async () => {
     await mainStore.getStore()
-
-    if (user.value.name === '' || user.value.activity_id === 0 || user.value.week_hours === 0) {
+    if (
+        !user.value ||
+        user.value.name === '' ||
+        user.value.activity_id === 0 ||
+        !user.value.week_hours ||
+        user.value.week_hours === 0
+    ) {
         currentPage.value = page.value.Settings
     } else {
         currentPage.value = page.value.Control
