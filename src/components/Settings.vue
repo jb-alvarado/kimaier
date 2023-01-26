@@ -1,7 +1,6 @@
 <template>
     <div class="container">
         <div class="card">
-            <p>Kimaier v{{ appVersion }}</p>
             <h4>Settings</h4>
             <form @submit.prevent="saveSettings()" @reset="currentPage = page.Control">
                 <input v-model="user.name" placeholder="Name" required />
@@ -33,6 +32,8 @@
                     <button type="submit">Save</button>
                 </div>
             </form>
+
+            <p>Kimaier v{{ appVersion }}</p>
         </div>
 
         <p>{{ saveMsg }}</p>
@@ -150,7 +151,7 @@ h4 {
     display: table;
     flex-wrap: wrap;
     align-content: center;
-    margin-top: 20px;
+    margin-top: 10px;
 }
 
 input {
