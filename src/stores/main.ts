@@ -28,6 +28,8 @@ interface User {
     week_hours: number
     project_id: number
     activity_id: number
+    state: string
+    work_days: string[]
 }
 
 export const useMainStore = defineStore('main', {
@@ -43,6 +45,8 @@ export const useMainStore = defineStore('main', {
             week_hours: 0,
             project_id: 0,
             activity_id: 0,
+            state: '',
+            work_days: [],
         } as User,
         allActivities: [] as any[],
         authHeader: {} as Header,
@@ -65,6 +69,9 @@ export const useMainStore = defineStore('main', {
                 .get('user')
                 .then((data: any) => {
                     if (data) {
+                        if (!data.work_days) {
+                            data.work_days = []
+                        }
                         this.user = data
                         this.currentPage = Page.Control
                         this.authHeader = {

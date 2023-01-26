@@ -46,23 +46,17 @@ const { user, currentPage, page } = storeToRefs(useMainStore())
 </script>
 <style scoped>
 .footer {
-    display: table;
-    flex-wrap: wrap;
-    align-content: center;
-    margin: 0 auto 20px auto;
-    text-align: center;
-    position: absolute;
-    bottom: 0;
-    width: calc(100% - 15px);
+    height:50px;
+    margin-top: -50px;
 }
 
-.footer > div {
+/* .footer > div {
     display: table;
     flex-wrap: wrap;
     align-content: center;
     margin: 0 auto;
     text-align: center;
-}
+} */
 
 .settings-button {
     display: inline-block;

@@ -5,7 +5,9 @@ Simple desktop time tracking tool that uses [kimai](https://www.kimai.org/de/).
 
 It is assumed that the projects and activities do not change often.
 
-![start](/docs/start.png) | ![pause](/docs/pause.png) | ![settings](/docs/settings.png)
+**For working hours calculation it uses german holiday!**
+
+![start](/docs/start.png) | ![pause](/docs/pause.png) | ![stats](/docs/stats.png) | ![settings](/docs/settings.png)
 
 ---
 

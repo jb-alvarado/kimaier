@@ -19,9 +19,9 @@
                     </svg>
                 </div>
             </button>
-        </div>
 
-        <p class="timer">{{ helper.secToHMS(timeCurrent) }}</p>
+            <div class="timer">{{ helper.secToHMS(timeCurrent) }}</div>
+        </div>
 
         <Footer />
     </div>

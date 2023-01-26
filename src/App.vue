@@ -2,14 +2,14 @@
     <div>
         <Control v-if="currentPage === page.Control" />
         <Statistics v-else-if="currentPage === page.Statistics" />
-        <Register v-else />
+        <Settings v-else />
     </div>
 </template>
 
 <script setup lang="ts">
 import { onMounted } from 'vue'
 import Control from './components/Control.vue'
-import Register from './components/Register.vue'
+import Settings from './components/Settings.vue'
 import Statistics from './components/Statistics.vue'
 
 import { storeToRefs } from 'pinia'
@@ -25,7 +25,8 @@ onMounted(async () => {
         user.value.name === '' ||
         user.value.activity_id === 0 ||
         !user.value.week_hours ||
-        user.value.week_hours === 0
+        user.value.week_hours === 0 ||
+        user.value.work_days.length === 0
     ) {
         currentPage.value = page.value.Settings
     } else {

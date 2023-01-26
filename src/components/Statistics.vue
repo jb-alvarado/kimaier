@@ -1,14 +1,16 @@
 <template>
     <div class="container">
-        <div class="table">
-            <div class="cell name-col"><strong>Today:</strong></div>
-            <div class="cell">{{ helper.secToHMS(timeToday) }}</div>
-            <div class="cell name-col"><strong>Month:</strong></div>
-            <div class="cell">{{ helper.secToHM(timeMonth) }}</div>
-            <div class="cell name-col"><strong>Target:</strong></div>
-            <div class="cell">{{ targetHours }}</div>
-            <div class="cell name-col"><strong>Left:</strong></div>
-            <div class="cell">{{ helper.secToHM(timeLeft) }}</div>
+        <div class="card">
+            <div class="table">
+                <div class="cell name-col"><strong>Today:</strong></div>
+                <div class="cell">{{ helper.secToHMS(timeToday) }}</div>
+                <div class="cell name-col"><strong>Month:</strong></div>
+                <div class="cell">{{ helper.secToHM(timeMonth) }}</div>
+                <div class="cell name-col"><strong>Target:</strong></div>
+                <div class="cell">{{ targetHours }}</div>
+                <div class="cell name-col"><strong>Left:</strong></div>
+                <div class="cell">{{ helper.secToHM(timeLeft) }}</div>
+            </div>
         </div>
 
         <Footer />
@@ -56,43 +58,46 @@ async function getActivities(date: string): Promise<any[]> {
 }
 
 async function getTotalHours(date: any): Promise<number> {
-    let daysInMonth = date.daysInMonth()
+    const daysInMonth = date.daysInMonth()
+    const dayHours = user.value.week_hours / user.value.work_days.length
     let holidays = [] as string[]
+    let currentDay = 1
     let weekHours = 0
     let totalHours = 0
 
-    await fetch(`https://feiertage-api.de/api/?jahr=${date.format('YYYY')}&nur_land=BY`, {
-        method: 'GET',
-    })
-        .then((response) => response.json())
-        .then((data) => {
-            if (data) {
-                Object.entries(data).forEach(([_, holiday]: any) => {
-                    if (holiday.hinweis === '' && date.isSame(holiday.datum, 'month')) {
-                        holidays.push(holiday.datum)
-                    }
-                })
-            }
+    if (user.value.state !== '' && user.value.state !== 'none') {
+        await fetch(`https://feiertage-api.de/api/?jahr=${date.format('YYYY')}&nur_land=${user.value.state}`, {
+            method: 'GET',
         })
+            .then((response) => response.json())
+            .then((data) => {
+                if (data) {
+                    Object.entries(data).forEach(([_, holiday]: any) => {
+                        if (holiday.hinweis === '' && date.isSame(holiday.datum, 'month')) {
+                            holidays.push(holiday.datum)
+                        }
+                    })
+                }
+            })
+    }
 
-    while (daysInMonth) {
-        const current = date.date(daysInMonth)
+    while (daysInMonth >= currentDay) {
+        const current = date.date(currentDay)
 
-        if (current.format('ddd') === 'Sun') {
+        if (current.format('dd') === 'Su') {
             totalHours += weekHours
             weekHours = 0
         }
 
         if (
-            current.format('ddd') !== 'Sat' &&
-            current.format('ddd') !== 'Sun' &&
+            user.value.work_days.includes(current.format('dd')) &&
             !holidays.includes(current.format('YYYY-MM-DD')) &&
             weekHours < user.value.week_hours
         ) {
-            weekHours += 8
+            weekHours += dayHours
         }
 
-        daysInMonth--
+        currentDay++
     }
 
     totalHours += weekHours
