@@ -38,7 +38,7 @@ const statisticsTimeout = ref()
 async function getActivities(date: string): Promise<any[]> {
     let list = [] as any[]
 
-    await fetch(`${user.value.api_url}/api/timesheets?begin=${date}`, {
+    await fetch(`${user.value.api_url}/api/timesheets?begin=${date}&size=200`, {
         method: 'GET',
         headers: new Headers({ 'Content-Type': 'application/json', ...authHeader.value }),
     })
@@ -114,6 +114,7 @@ function setTimer(time: any, activities: any[]): number {
 
     for (const act of activities.reverse()) {
         const begin = dayjs(act.begin, 'YYYY-MM-DDTHH:mm:ss+000ZZ')
+        console.log(act.begin, act.end)
 
         if (act.end) {
             const end = dayjs(act.end, 'YYYY-MM-DDTHH:mm:ss+000ZZ')
