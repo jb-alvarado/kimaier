@@ -55,11 +55,13 @@ export const useMainStore = defineStore('main', {
         timeCurrent: 0,
         timeToday: 0,
         timeMonth: 0,
+        timeWeek: 0,
         targetHours: 0,
         timeLeft: 0,
         runningActivity: [] as any[],
         todaysActivities: [] as any[],
         monthActivities: [] as any[],
+        weekActivities: [] as any[],
     }),
     getters: {},
 

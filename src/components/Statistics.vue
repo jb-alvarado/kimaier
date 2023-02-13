@@ -4,6 +4,8 @@
             <div class="table">
                 <div class="cell name-col"><strong>Today:</strong></div>
                 <div class="cell">{{ helper.secToHMS(timeToday) }}</div>
+                <div class="cell name-col"><strong>Week:</strong></div>
+                <div class="cell">{{ helper.secToHM(timeWeek) }}</div>
                 <div class="cell name-col"><strong>Month:</strong></div>
                 <div class="cell">{{ helper.secToHM(timeMonth) }}</div>
                 <div class="cell name-col"><strong>Target:</strong></div>
@@ -27,11 +29,12 @@ import { useMainStore } from '../stores/main'
 import Footer from './Footer.vue'
 import helper from '../helpers/helper'
 
+dayjs.Ls.en.weekStart = 1;
 dayjs.extend(utc)
 dayjs.extend(timezone)
 dayjs.extend(customParseFormat)
 
-const { user, authHeader, timeToday, timeMonth, timeLeft, targetHours, todaysActivities, monthActivities } =
+const { user, authHeader, timeToday, timeMonth, timeWeek, timeLeft, targetHours, todaysActivities, monthActivities, weekActivities } =
     storeToRefs(useMainStore())
 const statisticsTimeout = ref()
 
@@ -83,15 +86,16 @@ async function getTotalHours(date: any): Promise<number> {
 
     while (daysInMonth >= currentDay) {
         const current = date.date(currentDay)
+        const currentDate = current.format('YYYY-MM-DD')
 
-        if (current.format('dd') === 'Su') {
+        if (current.format('dd') === 'Mo') {
             totalHours += weekHours
             weekHours = 0
         }
 
         if (
             user.value.work_days.includes(current.format('dd')) &&
-            !holidays.includes(current.format('YYYY-MM-DD')) &&
+            !holidays.includes(currentDate) &&
             weekHours < user.value.week_hours
         ) {
             weekHours += dayHours
@@ -105,6 +109,20 @@ async function getTotalHours(date: any): Promise<number> {
     return totalHours
 }
 
+function getWeekActivities(activities: any[]) {
+    let activitiesList = []
+
+    for (const act of activities.reverse()) {
+        const begin = dayjs(act.begin, 'YYYY-MM-DD')
+
+        if (dayjs().isSame(begin, 'week')) {
+            activitiesList.push(act)
+        }
+    }
+
+    return activitiesList
+}
+
 function setTimer(time: any, activities: any[]): number {
     if (activities.length === 0) {
         return 0
@@ -114,7 +132,6 @@ function setTimer(time: any, activities: any[]): number {
 
     for (const act of activities.reverse()) {
         const begin = dayjs(act.begin, 'YYYY-MM-DDTHH:mm:ss+000ZZ')
-        console.log(act.begin, act.end)
 
         if (act.end) {
             const end = dayjs(act.end, 'YYYY-MM-DDTHH:mm:ss+000ZZ')
@@ -133,6 +150,7 @@ async function status() {
     let month = time.utc().format('YYYY-MM-01T00:00:00')
     todaysActivities.value = await getActivities(today)
     monthActivities.value = await getActivities(month)
+    weekActivities.value = getWeekActivities(monthActivities.value)
     targetHours.value = await getTotalHours(time)
 
     async function setStatus(resolve: any) {
@@ -144,11 +162,13 @@ async function status() {
         month = time.utc().format('YYYY-MM-01T00:00:00')
         timeToday.value = setTimer(time, todaysActivities.value)
         timeMonth.value = setTimer(time, monthActivities.value)
+        timeWeek.value = setTimer(time, weekActivities.value)
         timeLeft.value = targetHours.value * 3600 - timeMonth.value
 
         if (time.unix() % 60 === 0) {
             todaysActivities.value = await getActivities(today)
             monthActivities.value = await getActivities(month)
+            weekActivities.value = getWeekActivities(monthActivities.value)
         }
 
         statisticsTimeout.value = setTimeout(() => setStatus(resolve), 1000)
