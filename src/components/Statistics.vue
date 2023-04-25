@@ -13,7 +13,7 @@
                 <div class="cell name-col"><strong>Left:</strong></div>
                 <div class="cell">{{ helper.secToHM(timeLeft) }}</div>
                 <div class="cell name-col"><strong>Overtime:</strong></div>
-                <div class="cell">{{ (totalOvertime < 0) ? helper.secToHM(Math.abs(totalOvertime)) : `-${helper.secToHM(Math.abs(totalOvertime))}` }}</div>
+                <div class="cell">{{ (totalOvertime <= 0) ? helper.secToHM(Math.abs(totalOvertime)) : `-${helper.secToHM(totalOvertime)}` }}</div>
             </div>
         </div>
 
