@@ -12,6 +12,8 @@
                 <div class="cell">{{ targetHours }}</div>
                 <div class="cell name-col"><strong>Left:</strong></div>
                 <div class="cell">{{ helper.secToHM(timeLeft) }}</div>
+                <div class="cell name-col"><strong>Overtime:</strong></div>
+                <div class="cell">{{ (totalOvertime > 0) ? `-${helper.secToHM(totalOvertime)}` : helper.secToHM(totalOvertime) }}</div>
             </div>
         </div>
 
@@ -34,14 +36,23 @@ dayjs.extend(utc)
 dayjs.extend(timezone)
 dayjs.extend(customParseFormat)
 
-const { user, authHeader, timeToday, timeMonth, timeWeek, timeLeft, targetHours, todaysActivities, monthActivities, weekActivities } =
+const { user, authHeader, holidays, timeToday, timeMonth, timeWeek, timeLeft, totalOvertime, targetHours, todaysActivities, monthActivities, weekActivities } =
     storeToRefs(useMainStore())
 const statisticsTimeout = ref()
+const yearBegin = ref()
+const yearEnd = ref()
+const yearSeconds = ref(0)
+const totalTargetSeconds = ref(0)
 
-async function getActivities(date: string): Promise<any[]> {
+async function getActivities(begin: string, end: string|null): Promise<any[]> {
     let list = [] as any[]
+    let _end = ''
 
-    await fetch(`${user.value.api_url}/api/timesheets?begin=${date}&size=200`, {
+    if (end) {
+        _end = `&end=${end}`
+    }
+
+    await fetch(`${user.value.api_url}/api/timesheets?begin=${begin}${_end}&size=20000`, {
         method: 'GET',
         headers: new Headers({ 'Content-Type': 'application/json', ...authHeader.value }),
     })
@@ -60,29 +71,34 @@ async function getActivities(date: string): Promise<any[]> {
     return list
 }
 
-async function getTotalHours(date: any): Promise<number> {
-    const daysInMonth = date.daysInMonth()
-    const dayHours = user.value.week_hours / user.value.work_days.length
-    let holidays = [] as string[]
-    let currentDay = 1
-    let weekHours = 0
-    let totalHours = 0
-
-    if (user.value.state !== '' && user.value.state !== 'none') {
-        await fetch(`https://feiertage-api.de/api/?jahr=${date.format('YYYY')}&nur_land=${user.value.state}`, {
+async function getHolidays(date: any) {
+    let dateList = [] as string[]
+    await fetch(`https://feiertage-api.de/api/?jahr=${date.format('YYYY')}&nur_land=${user.value.state}`, {
             method: 'GET',
         })
             .then((response) => response.json())
             .then((data) => {
                 if (data) {
                     Object.entries(data).forEach(([_, holiday]: any) => {
-                        if (holiday.hinweis === '' && date.isSame(holiday.datum, 'month')) {
-                            holidays.push(holiday.datum)
+                        if (holiday.hinweis === '') {
+                            dateList.push(holiday.datum)
                         }
                     })
+
+                    holidays.value = dateList
                 }
             })
-    }
+}
+
+async function getTotalHours(date: any): Promise<number> {
+    /*
+        get total target working hour for given month
+    */
+    const daysInMonth = date.daysInMonth()
+    const dayHours = user.value.week_hours / user.value.work_days.length
+    let currentDay = 1
+    let weekHours = 0
+    let totalHours = 0
 
     while (daysInMonth >= currentDay) {
         const current = date.date(currentDay)
@@ -95,7 +111,7 @@ async function getTotalHours(date: any): Promise<number> {
 
         if (
             user.value.work_days.includes(current.format('dd')) &&
-            !holidays.includes(currentDate) &&
+            !holidays.value.includes(currentDate) &&
             weekHours < user.value.week_hours
         ) {
             weekHours += dayHours
@@ -144,14 +160,34 @@ function setTimer(time: any, activities: any[]): number {
     return timeDiff
 }
 
+async function getYearActivities() {
+    let activities = await getActivities(yearBegin.value.utc().format('YYYY-MM-DDThh:mm:ss'), yearEnd.value.utc().format('YYYY-MM-DDThh:mm:ss'))
+
+    for (const activity of activities) {
+        yearSeconds.value += activity.duration
+    }
+}
+
 async function status() {
     let time = dayjs()
     let today = time.utc().format('YYYY-MM-DDT00:00:00')
     let month = time.utc().format('YYYY-MM-01T00:00:00')
-    todaysActivities.value = await getActivities(today)
-    monthActivities.value = await getActivities(month)
+    yearBegin.value = dayjs(`${time.year()}-01-01T00:00:00`)
+    yearEnd.value = dayjs(`${time.year()}-${time.month()}-01T00:00:00`)
+
+    let startDate = yearBegin.value
+
+    todaysActivities.value = await getActivities(today, null)
+    monthActivities.value = await getActivities(month, null)
     weekActivities.value = getWeekActivities(monthActivities.value)
+    await getHolidays(time)
     targetHours.value = await getTotalHours(time)
+    await getYearActivities()
+
+    while (yearEnd.value.isAfter(startDate)) {
+        totalTargetSeconds.value = await getTotalHours(startDate) * 3600
+        startDate = startDate.add(1, 'month')
+    }
 
     async function setStatus(resolve: any) {
         /*
@@ -164,10 +200,11 @@ async function status() {
         timeMonth.value = setTimer(time, monthActivities.value)
         timeWeek.value = setTimer(time, weekActivities.value)
         timeLeft.value = targetHours.value * 3600 - timeMonth.value
+        totalOvertime.value = totalTargetSeconds.value - timeMonth.value
 
         if (time.unix() % 60 === 0) {
-            todaysActivities.value = await getActivities(today)
-            monthActivities.value = await getActivities(month)
+            todaysActivities.value = await getActivities(today, null)
+            monthActivities.value = await getActivities(month, null)
             weekActivities.value = getWeekActivities(monthActivities.value)
         }
 
@@ -190,8 +227,7 @@ onBeforeUnmount(() => {
 }
 
 .table {
-    width: 50vw;
-    max-width: 160px;
+    max-width: 165px;
     margin: 0 auto 20px auto;
 }
 .table:after {
@@ -201,9 +237,13 @@ onBeforeUnmount(() => {
 }
 .cell {
     float: left;
-    width: 50%;
     text-align: left;
     padding: 0px 2px 0px 2px;
+}
+
+.name-col {
+    width: 52%;
+    min-width: 80px;
 }
 
 @media screen and (max-width: 200px) {
