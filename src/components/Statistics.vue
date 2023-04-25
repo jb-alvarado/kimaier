@@ -13,7 +13,7 @@
                 <div class="cell name-col"><strong>Left:</strong></div>
                 <div class="cell">{{ helper.secToHM(timeLeft) }}</div>
                 <div class="cell name-col"><strong>Overtime:</strong></div>
-                <div class="cell">{{ (totalOvertime > 0) ? `-${helper.secToHM(totalOvertime)}` : helper.secToHM(totalOvertime) }}</div>
+                <div class="cell">{{ (totalOvertime < 0) ? helper.secToHM(Math.abs(totalOvertime)) : `-${helper.secToHM(Math.abs(totalOvertime))}` }}</div>
             </div>
         </div>
 
@@ -41,7 +41,7 @@ const { user, authHeader, holidays, timeToday, timeMonth, timeWeek, timeLeft, to
 const statisticsTimeout = ref()
 const yearBegin = ref()
 const yearEnd = ref()
-const yearSeconds = ref(0)
+const totalWorkSeconds = ref(0)
 const totalTargetSeconds = ref(0)
 
 async function getActivities(begin: string, end: string|null): Promise<any[]> {
@@ -164,7 +164,7 @@ async function getYearActivities() {
     let activities = await getActivities(yearBegin.value.utc().format('YYYY-MM-DDThh:mm:ss'), yearEnd.value.utc().format('YYYY-MM-DDThh:mm:ss'))
 
     for (const activity of activities) {
-        yearSeconds.value += activity.duration
+        totalWorkSeconds.value += activity.duration
     }
 }
 
@@ -173,7 +173,7 @@ async function status() {
     let today = time.utc().format('YYYY-MM-DDT00:00:00')
     let month = time.utc().format('YYYY-MM-01T00:00:00')
     yearBegin.value = dayjs(`${time.year()}-01-01T00:00:00`)
-    yearEnd.value = dayjs(`${time.year()}-${time.month()}-01T00:00:00`)
+    yearEnd.value = dayjs(`${time.year()}-${time.month() + 1}-01T00:00:00`)
 
     let startDate = yearBegin.value
 
@@ -184,8 +184,8 @@ async function status() {
     targetHours.value = await getTotalHours(time)
     await getYearActivities()
 
-    while (yearEnd.value.isAfter(startDate)) {
-        totalTargetSeconds.value = await getTotalHours(startDate) * 3600
+    while (yearEnd.value.add(1, 'month').isAfter(startDate)) {
+        totalTargetSeconds.value += await getTotalHours(startDate) * 3600
         startDate = startDate.add(1, 'month')
     }
 
@@ -200,7 +200,7 @@ async function status() {
         timeMonth.value = setTimer(time, monthActivities.value)
         timeWeek.value = setTimer(time, weekActivities.value)
         timeLeft.value = targetHours.value * 3600 - timeMonth.value
-        totalOvertime.value = totalTargetSeconds.value - timeMonth.value
+        totalOvertime.value = totalTargetSeconds.value - (totalWorkSeconds.value + targetHours.value * 3600)
 
         if (time.unix() % 60 === 0) {
             todaysActivities.value = await getActivities(today, null)
