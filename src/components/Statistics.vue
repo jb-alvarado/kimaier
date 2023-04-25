@@ -22,7 +22,6 @@
 </template>
 <script setup lang="ts">
 import dayjs from 'dayjs'
-import utc from 'dayjs/plugin/utc.js'
 import timezone from 'dayjs/plugin/timezone.js'
 import customParseFormat from 'dayjs/plugin/customParseFormat'
 import { onMounted, onBeforeUnmount, ref } from 'vue'
@@ -32,7 +31,6 @@ import Footer from './Footer.vue'
 import helper from '../helpers/helper'
 
 dayjs.Ls.en.weekStart = 1;
-dayjs.extend(utc)
 dayjs.extend(timezone)
 dayjs.extend(customParseFormat)
 
@@ -161,7 +159,7 @@ function setTimer(time: any, activities: any[]): number {
 }
 
 async function getYearActivities() {
-    let activities = await getActivities(yearBegin.value.utc().format('YYYY-MM-DDThh:mm:ss'), yearEnd.value.utc().format('YYYY-MM-DDThh:mm:ss'))
+    let activities = await getActivities(yearBegin.value.format('YYYY-MM-DDTHH:mm:ss'), yearEnd.value.format('YYYY-MM-DDTHH:mm:ss'))
 
     for (const activity of activities) {
         totalWorkSeconds.value += activity.duration
@@ -170,10 +168,10 @@ async function getYearActivities() {
 
 async function status() {
     let time = dayjs()
-    let today = time.utc().format('YYYY-MM-DDT00:00:00')
-    let month = time.utc().format('YYYY-MM-01T00:00:00')
-    yearBegin.value = dayjs(`${time.year()}-01-01T00:00:00`)
-    yearEnd.value = dayjs(`${time.year()}-${time.month() + 1}-01T00:00:00`)
+    let today = time.format('YYYY-MM-DDT00:00:00')
+    let month = time.format('YYYY-MM-01T00:00:00')
+    yearBegin.value = dayjs(time.format('YYYY-01-01T00:00:00'))
+    yearEnd.value = dayjs(time.format('YYYY-MM-01T00:00:00'))
 
     let startDate = yearBegin.value
 
@@ -194,8 +192,8 @@ async function status() {
             recursive function as a endless loop
         */
         time = dayjs()
-        today = time.utc().format('YYYY-MM-DDT00:00:00')
-        month = time.utc().format('YYYY-MM-01T00:00:00')
+        today = time.format('YYYY-MM-DDT00:00:00')
+        month = time.format('YYYY-MM-01T00:00:00')
         timeToday.value = setTimer(time, todaysActivities.value)
         timeMonth.value = setTimer(time, monthActivities.value)
         timeWeek.value = setTimer(time, weekActivities.value)
