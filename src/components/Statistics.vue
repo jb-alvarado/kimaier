@@ -41,6 +41,7 @@ const yearBegin = ref()
 const yearEnd = ref()
 const totalWorkSeconds = ref(0)
 const totalTargetSeconds = ref(0)
+const totalTargetToday = ref(0)
 
 async function getActivities(begin: string, end: string|null): Promise<any[]> {
     let list = [] as any[]
@@ -115,6 +116,10 @@ async function getTotalHours(date: any): Promise<number> {
             weekHours += dayHours
         }
 
+        if (currentDate === dayjs().format('YYYY-MM-DD')) {
+            totalTargetToday.value = totalHours + weekHours
+        }
+
         currentDay++
     }
 
@@ -160,8 +165,13 @@ function setTimer(time: any, activities: any[]): number {
 
 async function getYearActivities() {
     let activities = await getActivities(yearBegin.value.format('YYYY-MM-DDTHH:mm:ss'), yearEnd.value.format('YYYY-MM-DDTHH:mm:ss'))
+    let month = '2023-00'
 
     for (const activity of activities) {
+        const d = dayjs(activity.begin).format('YYYY-MM')
+        if (d !== month) {
+            month = d
+        }
         totalWorkSeconds.value += activity.duration
     }
 }
@@ -182,10 +192,12 @@ async function status() {
     targetHours.value = await getTotalHours(time)
     await getYearActivities()
 
-    while (yearEnd.value.add(1, 'month').isAfter(startDate)) {
+    while (yearEnd.value.isAfter(startDate)) {
         totalTargetSeconds.value += await getTotalHours(startDate) * 3600
         startDate = startDate.add(1, 'month')
     }
+
+    const yearTargetToday = totalTargetSeconds.value + totalTargetToday.value * 3600
 
     async function setStatus(resolve: any) {
         /*
@@ -198,7 +210,7 @@ async function status() {
         timeMonth.value = setTimer(time, monthActivities.value)
         timeWeek.value = setTimer(time, weekActivities.value)
         timeLeft.value = targetHours.value * 3600 - timeMonth.value
-        totalOvertime.value = totalTargetSeconds.value - (totalWorkSeconds.value + targetHours.value * 3600)
+        totalOvertime.value = yearTargetToday - (totalWorkSeconds.value + timeMonth.value)
 
         if (time.unix() % 60 === 0) {
             todaysActivities.value = await getActivities(today, null)
