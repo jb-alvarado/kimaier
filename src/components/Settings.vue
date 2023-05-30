@@ -9,6 +9,7 @@
                 <input v-model="user.project" placeholder="Project" required />
                 <input v-model="user.activity" placeholder="Activity" required />
                 <input v-model="user.week_hours" placeholder="Hours per Week" type="number" tep="0.1" required />
+                <input v-model="user.work_start" type="date" required />
 
                 <div class="day-group">
                     <button

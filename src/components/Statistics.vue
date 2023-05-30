@@ -183,6 +183,12 @@ async function status() {
     yearBegin.value = dayjs(time.format('YYYY-01-01T00:00:00'))
     yearEnd.value = dayjs(time.format('YYYY-MM-01T00:00:00'))
 
+    let workStart = dayjs(`${user.value.work_start}T00:00:00`)
+
+    if (workStart.isAfter(yearBegin.value)) {
+        yearBegin.value = workStart
+    }
+
     let startDate = yearBegin.value
 
     todaysActivities.value = await getActivities(today, null)
