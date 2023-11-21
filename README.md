@@ -12,3 +12,5 @@ It is assumed that the projects and activities do not change often.
 ---
 
 Control icons are from [fontawesome](https://fontawesome.com) which are license under [creativecommons v4.0](https://creativecommons.org/licenses/by/4.0/)
+
+**When screen in dev mode is blank run it with: `WEBKIT_DISABLE_COMPOSITING_MODE=1 npm run tauri dev`

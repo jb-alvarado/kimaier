@@ -8,7 +8,7 @@
     },
     "package": {
         "productName": "kimaier",
-        "version": "0.5.1"
+        "version": "0.6.0"
     },
     "tauri": {
         "allowlist": {
@@ -70,11 +70,11 @@
         "windows": [
             {
                 "fullscreen": false,
-                "height": 400,
-                "minHeight": 340,
+                "height": 350,
+                "minHeight": 350,
                 "resizable": true,
                 "title": "Kimaier",
-                "width": 300,
+                "width": 250,
                 "minWidth": 160
             }
         ]

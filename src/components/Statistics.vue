@@ -51,7 +51,7 @@ async function getActivities(begin: string, end: string|null): Promise<any[]> {
         _end = `&end=${end}`
     }
 
-    await fetch(`${user.value.api_url}/api/timesheets?begin=${begin}${_end}&size=20000`, {
+    await fetch(`${user.value.api_url}/api/timesheets?begin=${begin}${_end}&size=20000&order=ASC`, {
         method: 'GET',
         headers: new Headers({ 'Content-Type': 'application/json', ...authHeader.value }),
     })
