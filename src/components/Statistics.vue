@@ -34,7 +34,7 @@ dayjs.Ls.en.weekStart = 1;
 dayjs.extend(timezone)
 dayjs.extend(customParseFormat)
 
-const { user, authHeader, holidays, timeToday, timeMonth, timeWeek, timeLeft, totalOvertime, targetHours, todaysActivities, monthActivities, weekActivities } =
+const { user, authHeader, timeToday, timeMonth, timeWeek, timeLeft, totalOvertime, targetHours, todaysActivities, monthActivities, weekActivities } =
     storeToRefs(useMainStore())
 const statisticsTimeout = ref()
 const yearBegin = ref()
@@ -70,25 +70,6 @@ async function getActivities(begin: string, end: string|null): Promise<any[]> {
     return list
 }
 
-async function getHolidays(date: any) {
-    let dateList = [] as string[]
-    await fetch(`https://feiertage-api.de/api/?jahr=${date.format('YYYY')}&nur_land=${user.value.state}`, {
-            method: 'GET',
-        })
-            .then((response) => response.json())
-            .then((data) => {
-                if (data) {
-                    Object.entries(data).forEach(([_, holiday]: any) => {
-                        if (holiday.hinweis === '') {
-                            dateList.push(holiday.datum)
-                        }
-                    })
-
-                    holidays.value = dateList
-                }
-            })
-}
-
 async function getTotalHours(date: any): Promise<number> {
     /*
         get total target working hour for given month
@@ -110,7 +91,6 @@ async function getTotalHours(date: any): Promise<number> {
 
         if (
             user.value.work_days.includes(current.format('dd')) &&
-            !holidays.value.includes(currentDate) &&
             weekHours < user.value.week_hours
         ) {
             weekHours += dayHours
@@ -178,7 +158,8 @@ async function getYearActivities() {
 
 async function status() {
     let time = dayjs()
-    let today = time.format('YYYY-MM-DDT00:00:00')
+    let todayBegin = time.format('YYYY-MM-DDT00:00:00')
+    let todayEnd = time.format('YYYY-MM-DDT23:59:59')
     let month = time.format('YYYY-MM-01T00:00:00')
     yearBegin.value = dayjs(time.format('YYYY-01-01T00:00:00'))
     yearEnd.value = dayjs(time.format('YYYY-MM-01T00:00:00'))
@@ -191,10 +172,9 @@ async function status() {
 
     let startDate = yearBegin.value
 
-    todaysActivities.value = await getActivities(today, null)
-    monthActivities.value = await getActivities(month, null)
+    todaysActivities.value = await getActivities(todayBegin, todayEnd)
+    monthActivities.value = await getActivities(month, todayEnd)
     weekActivities.value = getWeekActivities(monthActivities.value)
-    await getHolidays(time)
     targetHours.value = await getTotalHours(time)
     await getYearActivities()
 
@@ -210,7 +190,8 @@ async function status() {
             recursive function as a endless loop
         */
         time = dayjs()
-        today = time.format('YYYY-MM-DDT00:00:00')
+        todayBegin = time.format('YYYY-MM-DDT00:00:00')
+        todayEnd = time.format('YYYY-MM-DDT23:59:59')
         month = time.format('YYYY-MM-01T00:00:00')
         timeToday.value = setTimer(time, todaysActivities.value)
         timeMonth.value = setTimer(time, monthActivities.value)
@@ -219,8 +200,8 @@ async function status() {
         totalOvertime.value = yearTargetToday - (totalWorkSeconds.value + timeMonth.value)
 
         if (time.unix() % 60 === 0) {
-            todaysActivities.value = await getActivities(today, null)
-            monthActivities.value = await getActivities(month, null)
+            todaysActivities.value = await getActivities(todayBegin, todayEnd)
+            monthActivities.value = await getActivities(month, todayEnd)
             weekActivities.value = getWeekActivities(monthActivities.value)
         }
 

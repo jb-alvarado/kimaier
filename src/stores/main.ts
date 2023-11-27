@@ -54,7 +54,6 @@ export const useMainStore = defineStore('main', {
         authHeader: {} as Header,
         currentPage: Page.Settings,
         isRunning: null as boolean | null,
-        holidays: [] as string[],
         timeCurrent: 0,
         timeToday: 0,
         timeMonth: 0,

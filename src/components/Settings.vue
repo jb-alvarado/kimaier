@@ -24,10 +24,6 @@
                     </button>
                 </div>
 
-                <select name="states" id="states" v-model="user.state">
-                    <option v-for="item in states" :value="item.short" key="item.short">{{ item.name }}</option>
-                </select>
-
                 <div class="btn-group">
                     <button type="reset">Cancel</button>
                     <button type="submit">Save</button>
@@ -53,26 +49,6 @@ const mainStore = useMainStore()
 
 const appVersion = ref()
 const saveMsg = ref('')
-
-const states = ref([
-    { name: '', short: 'none' },
-    { name: 'Baden-Württemberg', short: 'BW' },
-    { name: 'Bayern', short: 'BY' },
-    { name: 'Berlin', short: 'BE' },
-    { name: 'Brandenburg', short: 'BB' },
-    { name: 'Bremen', short: 'HB' },
-    { name: 'Hamburg', short: 'HH' },
-    { name: 'Hessen ', short: 'HE' },
-    { name: 'Mecklenburg-Vorpommern', short: 'MV' },
-    { name: 'Niedersachsen ', short: 'NI' },
-    { name: 'Nordrhein-Westfalen ', short: 'NW' },
-    { name: 'Rheinland-Pfalz ', short: 'RP' },
-    { name: 'Saarland', short: 'SL' },
-    { name: 'Sachsen ', short: 'SN' },
-    { name: 'Sachsen-Anhalt ', short: 'ST' },
-    { name: 'Schleswig-Holstein', short: 'SH' },
-    { name: 'Thüringen', short: 'TH' },
-])
 
 const days = ref([
     { name: 'Mo', active: false },
@@ -196,11 +172,5 @@ input::-webkit-inner-spin-button {
 .day-group > .day-btn:last-child {
     border-top-right-radius: 4px;
     border-bottom-right-radius: 4px;
-}
-
-#states {
-    width: 100%;
-    margin-top: 0.5em;
-    appearance: none;
 }
 </style>
