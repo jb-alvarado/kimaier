@@ -10,6 +10,8 @@ use tauri::{CustomMenuItem, SystemTray, SystemTrayEvent, SystemTrayMenu, SystemT
 use tauri_plugin_positioner::{Position, WindowExt};
 
 fn main() {
+    std::env::set_var("WEBKIT_DISABLE_COMPOSITING_MODE", "1");
+
     let quit = CustomMenuItem::new("quit".to_string(), "Quit");
     let hide = CustomMenuItem::new("hide".to_string(), "Hide");
     let tray_menu = SystemTrayMenu::new()
