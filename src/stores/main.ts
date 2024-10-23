@@ -3,7 +3,7 @@ import utc from 'dayjs/plugin/utc.js'
 import timezone from 'dayjs/plugin/timezone.js'
 
 import { defineStore } from 'pinia'
-import { Store } from 'tauri-plugin-store-api'
+import { LazyStore } from '@tauri-apps/plugin-store'
 
 dayjs.extend(utc)
 dayjs.extend(timezone)
@@ -35,7 +35,7 @@ interface User {
 
 export const useMainStore = defineStore('main', {
     state: () => ({
-        store: new Store('kimaier.dat'),
+        store: new LazyStore('kimaier.dat'),
         page: Page,
         user: {
             name: '',

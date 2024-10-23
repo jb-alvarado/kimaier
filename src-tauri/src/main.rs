@@ -3,85 +3,56 @@
     windows_subsystem = "windows"
 )]
 
-use std::process::exit;
-
 use tauri::Manager;
-use tauri::{CustomMenuItem, SystemTray, SystemTrayEvent, SystemTrayMenu, SystemTrayMenuItem};
+use tauri::{
+    menu::{Menu, MenuItem},
+    tray::TrayIconBuilder,
+};
 use tauri_plugin_positioner::{Position, WindowExt};
 
 fn main() {
     std::env::set_var("WEBKIT_DISABLE_COMPOSITING_MODE", "1");
 
-    let quit = CustomMenuItem::new("quit".to_string(), "Quit");
-    let hide = CustomMenuItem::new("hide".to_string(), "Hide");
-    let tray_menu = SystemTrayMenu::new()
-        .add_item(quit)
-        .add_native_item(SystemTrayMenuItem::Separator)
-        .add_item(hide);
-    let system_tray = SystemTray::new().with_menu(tray_menu);
-
     tauri::Builder::default()
+        .plugin(tauri_plugin_updater::Builder::new().build())
+        .plugin(tauri_plugin_store::Builder::new().build())
+        .plugin(tauri_plugin_shell::init())
         .setup(|app| {
-            let win = app.get_window("main").unwrap();
+            let quit = MenuItem::with_id(app, "quit", "Quit", true, None::<&str>)?;
+            let hide = MenuItem::with_id(app, "hide", "Hide", true, None::<&str>)?;
+            let menu = Menu::with_items(app, &[&hide, &quit])?;
+            let win = app.get_webview_window("main").unwrap();
             let _ = win.move_window(Position::TopRight);
+            let win_clone = win.clone();
+            let _ = TrayIconBuilder::new()
+                .menu(&menu)
+                .menu_on_left_click(true)
+                .icon(app.default_window_icon().unwrap().clone())
+                .on_menu_event(move |app, event| match event.id.as_ref() {
+                    "hide" => {
+                        if win_clone.is_visible().unwrap_or_default() {
+                            win_clone.hide().expect("hide window");
+                            hide.set_text("Show").expect("set text");
+                        } else {
+                            win_clone.show().expect("show window");
+                            hide.set_text("Hide").expect("set text");
+                        };
+                    }
+                    "quit" => {
+                        app.exit(0);
+                    }
+                    _ => {
+                        println!("menu item {:?} not handled", event.id);
+                    }
+                })
+                .build(app)?;
 
             Ok(())
         })
-        .plugin(tauri_plugin_store::Builder::default().build())
-        .plugin(tauri_plugin_window_state::Builder::default().build())
-        .system_tray(system_tray)
-        .on_window_event(|event| {
-            if let tauri::WindowEvent::CloseRequested { api, .. } = event.event() {
-                event.window().hide().unwrap();
-                api.prevent_close();
-            }
-        })
-        .on_system_tray_event(|app, event| match event {
-            SystemTrayEvent::DoubleClick {
-                position: _,
-                size: _,
-                ..
-            } => {
-                let window = app.get_window("main").unwrap();
-                window.show().unwrap();
-            }
-            SystemTrayEvent::RightClick {
-                position: _,
-                size: _,
-                ..
-            } => {
-                let window = app.get_window("main").unwrap();
-                let item_handle = app.tray_handle().get_item("hide");
-
-                if window.is_visible().unwrap() {
-                    item_handle.set_title("Hide").unwrap();
-                } else {
-                    item_handle.set_title("Show").unwrap();
-                }
-            }
-            SystemTrayEvent::MenuItemClick { id, .. } => {
-                let window = app.get_window("main").unwrap();
-                let item_handle = app.tray_handle().get_item(&id);
-
-                match id.as_str() {
-                    "hide" => {
-                        if window.is_visible().unwrap() {
-                            window.hide().unwrap();
-                            item_handle.set_title("Show").unwrap();
-                        } else {
-                            window.show().unwrap();
-                            item_handle.set_title("Hide").unwrap();
-                            let _ = window.move_window(Position::TopRight);
-                        }
-                    }
-                    "quit" => {
-                        exit(0);
-                    }
-                    _ => {}
-                }
-            }
-            _ => {}
-        })
+        // .plugin(tauri_plugin_window_state::Builder::default().build())
+        // .on_window_event(|window, event| {
+        //     println!("event {:?}", window.is_visible());
+        // })
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

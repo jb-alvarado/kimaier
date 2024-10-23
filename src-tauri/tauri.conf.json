@@ -1,82 +1,77 @@
 {
-    "build": {
-        "beforeDevCommand": "npm run dev",
-        "beforeBuildCommand": "npm run build",
-        "devPath": "http://localhost:1420",
-        "distDir": "../dist",
-        "withGlobalTauri": false
+  "build": {
+    "beforeDevCommand": "npm run dev",
+    "beforeBuildCommand": "npm run build",
+    "frontendDist": "../dist",
+    "devUrl": "http://localhost:1420"
+  },
+  "bundle": {
+    "active": true,
+    "category": "DeveloperTool",
+    "copyright": "",
+    "targets": "all",
+    "externalBin": [],
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ],
+    "windows": {
+      "certificateThumbprint": null,
+      "digestAlgorithm": "sha256",
+      "timestampUrl": ""
     },
-    "package": {
-        "productName": "kimaier",
-        "version": "0.6.3"
+    "longDescription": "",
+    "macOS": {
+      "entitlements": null,
+      "exceptionDomain": "",
+      "frameworks": [],
+      "providerShortName": null,
+      "signingIdentity": null
     },
-    "tauri": {
-        "allowlist": {
-            "all": false,
-            "shell": {
-                "all": false,
-                "open": true
-            }
-        },
-        "bundle": {
-            "active": true,
-            "category": "DeveloperTool",
-            "copyright": "",
-            "deb": {
-                "depends": []
-            },
-            "externalBin": [],
-            "icon": [
-                "icons/32x32.png",
-                "icons/128x128.png",
-                "icons/128x128@2x.png",
-                "icons/icon.icns",
-                "icons/icon.ico"
-            ],
-            "identifier": "kimaier",
-            "longDescription": "",
-            "macOS": {
-                "entitlements": null,
-                "exceptionDomain": "",
-                "frameworks": [],
-                "providerShortName": null,
-                "signingIdentity": null
-            },
-            "resources": [],
-            "shortDescription": "",
-            "targets": "all",
-            "windows": {
-                "certificateThumbprint": null,
-                "digestAlgorithm": "sha256",
-                "timestampUrl": ""
-            }
-        },
-        "security": {
-            "csp": null
-        },
-        "systemTray": {
-            "iconPath": "icons/icon.png",
-            "iconAsTemplate": true,
-            "menuOnLeftClick": false
-        },
-        "updater": {
-            "active": true,
-            "endpoints": [
-                "https://github.com/jb-alvarado/kimaier/releases/latest/download/latest.json"
-            ],
-            "dialog": true,
-            "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDkyODAyQTVEQTI1RkQwQjYKUldTMjBGK2lYU3FBa2hGNHpoMEFoSHZMaDBpYVZpc3B3RldzTFNQTlJ4eEpDNW5NRWk2Mk5idWsK"
-        },
-        "windows": [
-            {
-                "fullscreen": false,
-                "height": 350,
-                "minHeight": 350,
-                "resizable": true,
-                "title": "Kimaier",
-                "width": 250,
-                "minWidth": 160
-            }
-        ]
+    "resources": [],
+    "shortDescription": "",
+    "linux": {
+      "deb": {
+        "depends": []
+      }
+    },
+    "createUpdaterArtifacts": "v1Compatible"
+  },
+  "productName": "kimaier",
+  "mainBinaryName": "kimaier",
+  "version": "0.7.0",
+  "identifier": "kimaier",
+  "plugins": {
+    "updater": {
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDkyODAyQTVEQTI1RkQwQjYKUldTMjBGK2lYU3FBa2hGNHpoMEFoSHZMaDBpYVZpc3B3RldzTFNQTlJ4eEpDNW5NRWk2Mk5idWsK",
+      "endpoints": [
+        "https://github.com/jb-alvarado/kimaier/releases/latest/download/latest.json"
+      ]
     }
+  },
+  "app": {
+    "withGlobalTauri": false,
+    "trayIcon": {
+      "iconPath": "icons/icon.png",
+      "iconAsTemplate": true,
+      "menuOnLeftClick": false
+    },
+    "security": {
+      "csp": null
+    },
+    "windows": [
+      {
+        "title": "Kimaier",
+        "width": 250,
+        "height": 350,
+        "minWidth": 160,
+        "minHeight": 350,
+        "resizable": true,
+        "fullscreen": false
+      }
+    ]
+  }
 }
