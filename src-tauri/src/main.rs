@@ -11,8 +11,8 @@ use tauri::{
     tray::{TrayIconBuilder, TrayIconEvent},
     WindowEvent, Wry,
 };
-use tauri_plugin_positioner::{Position, WindowExt};
-// use tauri_plugin_window_state::StateFlags;
+// use tauri_plugin_positioner::{Position, WindowExt};
+use tauri_plugin_window_state::StateFlags;
 
 struct AppState {
     hide_menu_item: Mutex<Option<MenuItem<Wry>>>,
@@ -25,11 +25,12 @@ fn main() {
     tauri::Builder::default()
         .plugin(tauri_plugin_updater::Builder::new().build())
         .plugin(tauri_plugin_store::Builder::new().build())
-        // .plugin(
-        //     tauri_plugin_window_state::Builder::default()
-        //         .with_state_flags(StateFlags::POSITION)
-        //         .build(),
-        // )
+        .plugin(
+            tauri_plugin_window_state::Builder::default()
+                .with_state_flags(StateFlags::POSITION)
+                .with_state_flags(StateFlags::VISIBLE)
+                .build(),
+        )
         .plugin(tauri_plugin_shell::init())
         .manage(AppState {
             hide_menu_item: Mutex::new(None),
@@ -39,7 +40,7 @@ fn main() {
             let hide = MenuItem::with_id(app, "hide", "Hide", true, None::<&str>)?;
             let menu = Menu::with_items(app, &[&hide, &quit])?;
             let window = app.get_webview_window("main").unwrap();
-            let _ = window.as_ref().window().move_window(Position::TopRight);
+            // let _ = window.as_ref().window().move_window(Position::TopRight);
             let window_clone = window.clone();
             let window_clone2 = window.clone();
 
