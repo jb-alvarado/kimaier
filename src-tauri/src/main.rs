@@ -20,7 +20,6 @@ struct AppState {
 
 fn main() {
     // prevent "Error 71 dispatching to Wayland display." error
-    #![cfg(target_os = "linux")]
     std::env::set_var("WEBKIT_DISABLE_COMPOSITING_MODE", "1");
 
     tauri::Builder::default()
