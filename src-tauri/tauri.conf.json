@@ -66,9 +66,9 @@
       {
         "title": "Kimaier",
         "width": 250,
-        "height": 350,
+        "height": 360,
         "minWidth": 160,
-        "minHeight": 350,
+        "minHeight": 360,
         "resizable": true,
         "fullscreen": false
       }

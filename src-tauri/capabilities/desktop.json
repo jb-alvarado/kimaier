@@ -6,6 +6,9 @@
     "linux"
   ],
   "permissions": [
-    "updater:default"
+    "updater:default",
+    "positioner:allow-move-window",
+    "positioner:allow-set-tray-icon-state",
+    "window-state:default"
   ]
 }
