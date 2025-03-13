@@ -42,7 +42,7 @@
   },
   "productName": "kimaier",
   "mainBinaryName": "kimaier",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "identifier": "kimaier",
   "plugins": {
     "updater": {
@@ -57,7 +57,7 @@
     "trayIcon": {
       "iconPath": "icons/icon.png",
       "iconAsTemplate": true,
-      "menuOnLeftClick": false
+      "showMenuOnLeftClick": true
     },
     "security": {
       "csp": null

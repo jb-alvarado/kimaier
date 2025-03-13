@@ -1,6 +1,6 @@
 [package]
 name = "kimaier"
-version = "0.7.0"
+version = "0.8.0"
 description = "Simple desktop time tracker, based on kimai backend"
 authors = ["Jonathan Bäcker <jonbae77@gmail.com>"]
 license = ""
@@ -8,7 +8,12 @@ repository = ""
 edition = "2021"
 rust-version = "1.57"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+[lib]
+# The `_lib` suffix may seem redundant but it is necessary
+# to make the lib name unique and wouldn't conflict with the bin name.
+# This seems to be only an issue on Windows, see https://github.com/rust-lang/cargo/issues/8519
+name = "kimaier_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
 
 [build-dependencies]
 tauri-build = { version = "2", features = [] }
@@ -17,9 +22,7 @@ tauri-build = { version = "2", features = [] }
 serde_json = "1"
 serde = { version = "1.0", features = ["derive"] }
 tauri = { version = "2", features = ["tray-icon"] }
-tauri-plugin-positioner = "2"
 tauri-plugin-store = "2"
-tauri-plugin-window-state = { version = "2" }
 tauri-plugin-shell = "2"
 
 [features]
@@ -36,4 +39,6 @@ strip = true
 lto = true
 
 [target.'cfg(not(any(target_os = "android", target_os = "ios")))'.dependencies]
+tauri-plugin-positioner = "2"
 tauri-plugin-updater = "2"
+tauri-plugin-window-state = "2"
