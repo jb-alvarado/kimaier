@@ -55,36 +55,27 @@ import { useMainStore } from '../stores/main'
 const { user, currentPage, page, isRunning } = storeToRefs(useMainStore())
 </script>
 <style scoped>
-.footer {
-    height: 50px;
-    margin-top: -50px;
-}
-
-/* .footer > div {
-    display: table;
-    flex-wrap: wrap;
-    align-content: center;
-    margin: 0 auto;
-    text-align: center;
-} */
-
 .settings-button {
     display: inline-block;
     border-radius: 50%;
-    width: 38px;
-    height: 38px;
-    line-height: 38px;
+    width: 34px;
+    height: 34px;
+    line-height: 35px;
     margin: 0 1em 0 1em;
 }
 
-.settings-button:hover {
-    border-color: #396cd8;
-}
-
 .settings-button svg {
-    width: 25px;
-    height: 25px;
+    width: 24px;
+    height: 24px;
     fill: gray;
     vertical-align: middle;
+}
+
+.settings-button svg:hover {
+    opacity: 0.9;
+}
+
+.settings-button svg:active {
+    fill: #a1a1a1;
 }
 </style>

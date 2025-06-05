@@ -1,7 +1,6 @@
 <template>
     <div class="container">
         <div class="card">
-            <h4>Settings</h4>
             <form @submit.prevent="saveSettings()" @reset="currentPage = page.Control">
                 <input v-model="user.name" placeholder="Name" required />
                 <input v-model="user.api_pass" type="password" placeholder="API Password" required />
@@ -119,16 +118,17 @@ onMounted(async () => {
     font-size: 12px;
 }
 
-h4 {
-    margin-top: 0;
-    margin-bottom: 0.3em;
-}
-
 .card {
     display: table;
     flex-wrap: wrap;
     align-content: center;
     margin-top: 10px;
+    text-align: center;
+}
+
+h5 {
+    margin-top: 0;
+    margin-bottom: 0.2em;
 }
 
 input {
@@ -138,11 +138,12 @@ input {
 
 input {
     width: 70vw;
+    height: 20px;
 }
 
 button {
     width: 80px;
-    margin: 0.5em 0.25em 0 0.25em;
+    margin: 0.5em 0 0 0;
 }
 
 input::-webkit-outer-spin-button,
@@ -152,11 +153,12 @@ input::-webkit-inner-spin-button {
 }
 
 .day-group > button {
-    margin: 0.5em 0 0 0;
-    padding: 3px;
+    font-size: 12px;
+    margin: 0.7em 0 0 0;
+    padding: 1px;
     line-height: 27px;
-    width: 34px;
-    height: 30px;
+    width: 25px;
+    height: 25px;
     border-radius: 0;
 }
 
@@ -172,5 +174,11 @@ input::-webkit-inner-spin-button {
 .day-group > .day-btn:last-child {
     border-top-right-radius: 4px;
     border-bottom-right-radius: 4px;
+}
+
+.btn-group {
+    display: flex;
+    gap: 1em;
+    justify-content: center;
 }
 </style>

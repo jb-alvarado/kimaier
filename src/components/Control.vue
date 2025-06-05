@@ -123,15 +123,15 @@ onBeforeUnmount(() => {
 
 <style scoped>
 #control-button {
-    width: 70vw;
-    height: 70vw;
-    line-height: 70vw;
+    width: 80vw;
+    height: 80vw;
+    line-height: 80vw;
     padding: 0;
 }
 
 #control-button svg {
-    width: 60vw;
-    height: 60vw;
+    width: 70vw;
+    height: 70vw;
     vertical-align: middle;
 }
 
