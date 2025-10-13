@@ -42,7 +42,7 @@
   },
   "productName": "kimaier",
   "mainBinaryName": "kimaier",
-  "version": "0.9.0",
+  "version": "0.10.0",
   "identifier": "kimaier",
   "plugins": {
     "updater": {
@@ -54,11 +54,6 @@
   },
   "app": {
     "withGlobalTauri": false,
-    "trayIcon": {
-      "iconPath": "icons/icon.png",
-      "iconAsTemplate": true,
-      "showMenuOnLeftClick": true
-    },
     "security": {
       "csp": null
     },
@@ -66,7 +61,7 @@
       {
         "title": "Kimaier",
         "width": 212,
-        "height": 320,
+        "height": 290,
         "minWidth": 200,
         "minHeight": 280,
         "resizable": true,

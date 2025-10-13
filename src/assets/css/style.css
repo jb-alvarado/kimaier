@@ -35,9 +35,14 @@ body,
     display: table;
     flex-wrap: wrap;
     align-content: center;
-    margin: 7vh auto 0 auto;
+    margin: 20px auto 0 auto;
     height: auto;
-    min-height: calc(100% - 7vh - 50px);
+    flex-grow: 1;
+}
+
+.footer {
+    padding: 10px 0;
+    text-align: center;
 }
 
 a {

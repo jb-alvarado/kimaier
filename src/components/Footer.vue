@@ -61,7 +61,7 @@ const { user, currentPage, page, isRunning } = storeToRefs(useMainStore())
     width: 34px;
     height: 34px;
     line-height: 35px;
-    margin: 0 1em 0 1em;
+    margin: 0 3%;
 }
 
 .settings-button svg {

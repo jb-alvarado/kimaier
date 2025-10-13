@@ -6,13 +6,14 @@ use tauri::Manager;
 use tauri::{
     menu::{Menu, MenuItem},
     tray::{TrayIconBuilder, TrayIconEvent},
-    WindowEvent, Wry,
+    PhysicalPosition, PhysicalSize, WindowEvent, Wry,
 };
-// use tauri_plugin_positioner::{Position, WindowExt};
 use tauri_plugin_window_state::StateFlags;
 
 struct AppState {
     hide_menu_item: Mutex<Option<MenuItem<Wry>>>,
+    size: Mutex<PhysicalSize<u32>>,
+    position: Mutex<PhysicalPosition<i32>>,
 }
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
@@ -20,6 +21,7 @@ pub fn run() -> tauri::Result<()> {
     tauri::Builder::default()
         .plugin(tauri_plugin_updater::Builder::new().build())
         .plugin(tauri_plugin_store::Builder::new().build())
+        .plugin(tauri_plugin_positioner::init())
         .plugin(
             tauri_plugin_window_state::Builder::default()
                 .with_state_flags(StateFlags::POSITION)
@@ -29,6 +31,11 @@ pub fn run() -> tauri::Result<()> {
         .plugin(tauri_plugin_shell::init())
         .manage(AppState {
             hide_menu_item: Mutex::new(None),
+            size: Mutex::new(PhysicalSize {
+                width: 0,
+                height: 0,
+            }),
+            position: Mutex::new(PhysicalPosition { x: 0, y: 0 }),
         })
         .setup(|app| {
             let quit = MenuItem::with_id(app, "quit", "Quit", true, None::<&str>)?;
@@ -40,9 +47,14 @@ pub fn run() -> tauri::Result<()> {
             let window_clone2 = window.clone();
 
             let app_handle = app.handle();
+            let app_state = app_handle.state::<AppState>();
+            let size: PhysicalSize<u32> = window_clone.inner_size().unwrap();
+            let position: PhysicalPosition<i32> = window_clone.outer_position().unwrap();
+
             {
-                let app_state = app_handle.state::<AppState>();
                 *app_state.hide_menu_item.lock().unwrap() = Some(hide.clone());
+                *app_state.size.lock().unwrap() = size;
+                *app_state.position.lock().unwrap() = position;
             }
 
             let _ = TrayIconBuilder::new()
@@ -72,7 +84,6 @@ pub fn run() -> tauri::Result<()> {
                         rect: _,
                         ..
                     } => {
-                        println!("DoubleClick");
                         let app_state = window_clone2.state::<AppState>();
                         let hide_menu_item = app_state.hide_menu_item.lock().unwrap();
 
@@ -81,13 +92,18 @@ pub fn run() -> tauri::Result<()> {
                                 hide.set_text("Hide").expect("set text");
                             }
                         } else {
+                            window_clone2.unminimize().unwrap();
                             window_clone2.show().unwrap();
-
-                            println!("window not visible");
 
                             if let Some(hide) = hide_menu_item.as_ref() {
                                 hide.set_text("Show").expect("set text");
                             }
+
+                            let size = app_state.size.lock().unwrap().to_owned();
+                            let position = app_state.position.lock().unwrap().to_owned();
+
+                            window_clone2.set_size(size).unwrap();
+                            window_clone2.set_position(position).unwrap();
                         }
                     }
 
@@ -106,6 +122,29 @@ pub fn run() -> tauri::Result<()> {
                 }
                 window.hide().expect("hide window");
                 api.prevent_close();
+            }
+            WindowEvent::Moved(position, ..) => {
+                // Handle window move event if needed
+                if position.x > -20000 && position.y > -20000 {
+                    let app_state = window.state::<AppState>();
+                    let mut pos_lock = app_state.position.lock().unwrap();
+                    *pos_lock = *position;
+                }
+            }
+            WindowEvent::Resized(size, ..) => {
+                // Handle window resize event if needed
+                if size.width == 0 && size.height == 0 {
+                    let app_state = window.state::<AppState>();
+                    let hide_menu_item = app_state.hide_menu_item.lock().unwrap();
+                    if let Some(hide) = hide_menu_item.as_ref() {
+                        hide.set_text("Show").expect("set text");
+                    }
+                    window.hide().expect("hide window");
+                } else {
+                    let app_state = window.state::<AppState>();
+                    let mut size_lock = app_state.size.lock().unwrap();
+                    *size_lock = *size;
+                }
             }
             _ => {}
         })

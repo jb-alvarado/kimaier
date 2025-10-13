@@ -1,11 +1,11 @@
 [package]
 name = "kimaier"
-version = "0.9.0"
+version = "0.10.0"
 description = "Simple desktop time tracker, based on kimai backend"
 authors = ["Jonathan Bäcker <jonbae77@gmail.com>"]
 license = ""
 repository = ""
-edition = "2021"
+edition = "2024"
 rust-version = "1.87"
 
 [lib]

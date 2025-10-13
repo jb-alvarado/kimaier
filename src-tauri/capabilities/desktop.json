@@ -7,8 +7,7 @@
   ],
   "permissions": [
     "updater:default",
-    "positioner:allow-move-window",
-    "positioner:allow-set-tray-icon-state",
+    "positioner:default",
     "window-state:default"
   ]
 }
