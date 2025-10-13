@@ -67,8 +67,21 @@ pub fn run() -> tauri::Result<()> {
                             window_clone.hide().expect("hide window");
                             hide.set_text("Show").expect("set text");
                         } else {
+                            let app_state = window_clone.state::<AppState>();
+                            let position = app_state.position.lock().unwrap().to_owned();
+
                             window_clone.show().expect("show window");
                             hide.set_text("Hide").expect("set text");
+
+                            #[cfg(not(target_os = "linux"))]
+                            {
+                                let size = app_state.size.lock().unwrap().to_owned();
+                                window_clone.set_size(size).unwrap();
+                            }
+
+                            println!("pos: {position:?}");
+
+                            window_clone.set_position(position).unwrap();
                         };
                     }
                     "quit" => {
@@ -92,15 +105,15 @@ pub fn run() -> tauri::Result<()> {
                                 hide.set_text("Hide").expect("set text");
                             }
                         } else {
+                            let size = app_state.size.lock().unwrap().to_owned();
+                            let position = app_state.position.lock().unwrap().to_owned();
+
                             window_clone2.unminimize().unwrap();
                             window_clone2.show().unwrap();
 
                             if let Some(hide) = hide_menu_item.as_ref() {
                                 hide.set_text("Show").expect("set text");
                             }
-
-                            let size = app_state.size.lock().unwrap().to_owned();
-                            let position = app_state.position.lock().unwrap().to_owned();
 
                             window_clone2.set_size(size).unwrap();
                             window_clone2.set_position(position).unwrap();
@@ -133,15 +146,15 @@ pub fn run() -> tauri::Result<()> {
             }
             WindowEvent::Resized(size, ..) => {
                 // Handle window resize event if needed
+                let app_state = window.state::<AppState>();
+
                 if size.width == 0 && size.height == 0 {
-                    let app_state = window.state::<AppState>();
                     let hide_menu_item = app_state.hide_menu_item.lock().unwrap();
                     if let Some(hide) = hide_menu_item.as_ref() {
                         hide.set_text("Show").expect("set text");
                     }
                     window.hide().expect("hide window");
                 } else {
-                    let app_state = window.state::<AppState>();
                     let mut size_lock = app_state.size.lock().unwrap();
                     *size_lock = *size;
                 }
