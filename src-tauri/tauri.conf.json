@@ -42,7 +42,7 @@
   },
   "productName": "kimaier",
   "mainBinaryName": "kimaier",
-  "version": "0.10.0",
+  "version": "0.10.1",
   "identifier": "kimaier",
   "plugins": {
     "updater": {
@@ -61,7 +61,7 @@
       {
         "title": "Kimaier",
         "width": 212,
-        "height": 340,
+        "height": 300,
         "minWidth": 200,
         "minHeight": 280,
         "resizable": true,
