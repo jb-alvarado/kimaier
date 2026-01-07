@@ -1,7 +1,7 @@
 {
     "name": "kimaier",
     "private": true,
-    "version": "0.10.1",
+    "version": "0.10.2",
     "type": "module",
     "scripts": {
         "dev": "vite",
@@ -10,20 +10,20 @@
         "tauri": "tauri"
     },
     "dependencies": {
-        "@tauri-apps/api": "^2.8.0",
-        "@tauri-apps/plugin-shell": "^2.3.1",
-        "@tauri-apps/plugin-store": "^2.4.0",
+        "@tauri-apps/api": "^2.9.1",
+        "@tauri-apps/plugin-shell": "^2.3.3",
+        "@tauri-apps/plugin-store": "^2.4.1",
         "@tauri-apps/plugin-updater": "^2.9.0",
-        "dayjs": "^1.11.18",
-        "pinia": "^3.0.3",
-        "vue": "^3.5.22"
+        "dayjs": "^1.11.19",
+        "pinia": "^3.0.4",
+        "vue": "^3.5.26"
     },
     "devDependencies": {
-        "@tauri-apps/cli": "^2.8.4",
-        "@types/node": "^22.15.29",
-        "@vitejs/plugin-vue": "^6.0.1",
-        "typescript": "^5.8.3",
-        "vite": "^7.1.9",
-        "vue-tsc": "^3.1.1"
+        "@tauri-apps/cli": "^2.9.6",
+        "@types/node": "^25.0.3",
+        "@vitejs/plugin-vue": "^6.0.3",
+        "typescript": "^5.9.3",
+        "vite": "^7.3.1",
+        "vue-tsc": "^3.2.2"
     }
 }
