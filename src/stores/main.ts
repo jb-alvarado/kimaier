@@ -9,8 +9,7 @@ dayjs.extend(utc)
 dayjs.extend(timezone)
 
 interface Header {
-    'X-AUTH-USER': string
-    'X-AUTH-TOKEN': string
+    Authorization: string
 }
 
 enum Page {
@@ -20,8 +19,7 @@ enum Page {
 }
 
 interface User {
-    name: string
-    api_pass: string
+    api_token: string
     api_url: string
     project: string
     activity: string
@@ -38,8 +36,7 @@ export const useMainStore = defineStore('main', {
         store: new LazyStore('kimaier.dat'),
         page: Page,
         user: {
-            name: '',
-            api_pass: '',
+            api_token: '',
             api_url: '',
             project: '',
             activity: '',
@@ -77,11 +74,15 @@ export const useMainStore = defineStore('main', {
                         if (!data.work_days) {
                             data.work_days = []
                         }
-                        this.user = data
+                        const apiToken = data.api_token || data.api_pass || ''
+                        this.user = {
+                            ...this.user,
+                            ...data,
+                            api_token: apiToken,
+                        }
                         this.currentPage = Page.Control
                         this.authHeader = {
-                            'X-AUTH-USER': data.name,
-                            'X-AUTH-TOKEN': data.api_pass,
+                            Authorization: `Bearer ${apiToken}`,
                         }
                     }
                 })

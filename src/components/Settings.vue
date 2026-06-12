@@ -1,41 +1,3 @@
-<template>
-    <div class="container">
-        <div class="card">
-            <form @submit.prevent="saveSettings()" @reset="currentPage = page.Control">
-                <input v-model="user.name" placeholder="Name" required />
-                <input v-model="user.api_pass" type="password" placeholder="API Password" required />
-                <input v-model="user.api_url" placeholder="API URL" required />
-                <input v-model="user.project" placeholder="Project" required />
-                <input v-model="user.activity" placeholder="Activity" required />
-                <input v-model="user.week_hours" placeholder="Hours per Week" type="number" tep="0.1" required />
-                <input v-model="user.work_start" type="date" required />
-
-                <div class="day-group">
-                    <button
-                        v-for="day in days"
-                        type="button"
-                        key="day.name"
-                        class="day-btn"
-                        :class="day.active ? 'btn-active' : ''"
-                        @click="activateDay(day)"
-                    >
-                        {{ day.name }}
-                    </button>
-                </div>
-
-                <div class="btn-group">
-                    <button type="reset">Cancel</button>
-                    <button type="submit">Save</button>
-                </div>
-            </form>
-
-            <p>Kimaier v{{ appVersion }}</p>
-        </div>
-
-        <p>{{ saveMsg }}</p>
-    </div>
-</template>
-
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
 import { getVersion } from '@tauri-apps/api/app'
@@ -62,8 +24,7 @@ const days = ref([
 async function saveSettings() {
     user.value.api_url = user.value.api_url.replace(/\/+$/, '')
     authHeader.value = {
-        'X-AUTH-USER': user.value.name,
-        'X-AUTH-TOKEN': user.value.api_pass,
+        Authorization: `Bearer ${user.value.api_token}`,
     }
 
     await mainStore.setActivities()
@@ -112,7 +73,42 @@ onMounted(async () => {
     }
 })
 </script>
+<template>
+    <div class="container">
+        <div class="card">
+            <form @submit.prevent="saveSettings()" @reset="currentPage = page.Control">
+                <input v-model="user.api_token" type="password" placeholder="API Token" required />
+                <input v-model="user.api_url" placeholder="API URL" required />
+                <input v-model="user.project" placeholder="Project" required />
+                <input v-model="user.activity" placeholder="Activity" required />
+                <input v-model="user.week_hours" placeholder="Hours per Week" type="number" tep="0.1" required />
+                <input v-model="user.work_start" type="date" required />
 
+                <div class="day-group">
+                    <button
+                        v-for="day in days"
+                        type="button"
+                        key="day.name"
+                        class="day-btn"
+                        :class="day.active ? 'btn-active' : ''"
+                        @click="activateDay(day)"
+                    >
+                        {{ day.name }}
+                    </button>
+                </div>
+
+                <div class="btn-group">
+                    <button type="reset">Cancel</button>
+                    <button type="submit">Save</button>
+                </div>
+            </form>
+
+            <p>Kimaier v{{ appVersion }}</p>
+        </div>
+
+        <p>{{ saveMsg }}</p>
+    </div>
+</template>
 <style scoped>
 .card p {
     font-size: 12px;

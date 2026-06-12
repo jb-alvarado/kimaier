@@ -1,25 +1,3 @@
-<template>
-    <div class="container">
-        <div class="card">
-            <div class="table">
-                <div class="cell name-col"><strong>Today:</strong></div>
-                <div class="cell">{{ helper.secToHMS(timeToday) }}</div>
-                <div class="cell name-col"><strong>Week:</strong></div>
-                <div class="cell">{{ helper.secToHM(timeWeek) }}</div>
-                <div class="cell name-col"><strong>Month:</strong></div>
-                <div class="cell">{{ helper.secToHM(timeMonth) }}</div>
-                <div class="cell name-col"><strong>Target:</strong></div>
-                <div class="cell">{{ targetHours }}</div>
-                <div class="cell name-col"><strong>Left:</strong></div>
-                <div class="cell">{{ helper.secToHM(timeLeft) }}</div>
-                <div class="cell name-col"><strong>Overtime:</strong></div>
-                <div class="cell">{{ (totalOvertime <= 0) ? helper.secToHM(Math.abs(totalOvertime)) : `-${helper.secToHM(totalOvertime)}` }}</div>
-            </div>
-        </div>
-
-        <Footer />
-    </div>
-</template>
 <script setup lang="ts">
 import dayjs from 'dayjs'
 import timezone from 'dayjs/plugin/timezone.js'
@@ -30,12 +8,23 @@ import { useMainStore } from '../stores/main'
 import Footer from './Footer.vue'
 import helper from '../helpers/helper'
 
-dayjs.Ls.en.weekStart = 1;
+dayjs.Ls.en.weekStart = 1
 dayjs.extend(timezone)
 dayjs.extend(customParseFormat)
 
-const { user, authHeader, timeToday, timeMonth, timeWeek, timeLeft, totalOvertime, targetHours, todaysActivities, monthActivities, weekActivities } =
-    storeToRefs(useMainStore())
+const {
+    user,
+    authHeader,
+    timeToday,
+    timeMonth,
+    timeWeek,
+    timeLeft,
+    totalOvertime,
+    targetHours,
+    todaysActivities,
+    monthActivities,
+    weekActivities,
+} = storeToRefs(useMainStore())
 const statisticsTimeout = ref()
 const yearBegin = ref()
 const yearEnd = ref()
@@ -43,7 +32,7 @@ const totalWorkSeconds = ref(0)
 const totalTargetSeconds = ref(0)
 const totalTargetToday = ref(0)
 
-async function getActivities(begin: string, end: string|null): Promise<any[]> {
+async function getActivities(begin: string, end: string | null): Promise<any[]> {
     let list = [] as any[]
     let _end = ''
 
@@ -89,10 +78,7 @@ async function getTotalHours(date: any): Promise<number> {
             weekHours = 0
         }
 
-        if (
-            user.value.work_days.includes(current.format('dd')) &&
-            weekHours < user.value.week_hours
-        ) {
+        if (user.value.work_days.includes(current.format('dd')) && weekHours < user.value.week_hours) {
             weekHours += dayHours
         }
 
@@ -144,7 +130,10 @@ function setTimer(time: any, activities: any[]): number {
 }
 
 async function getYearActivities() {
-    let activities = await getActivities(yearBegin.value.format('YYYY-MM-DDTHH:mm:ss'), yearEnd.value.format('YYYY-MM-DDTHH:mm:ss'))
+    let activities = await getActivities(
+        yearBegin.value.format('YYYY-MM-DDTHH:mm:ss'),
+        yearEnd.value.format('YYYY-MM-DDTHH:mm:ss'),
+    )
     let month = '2023-00'
 
     for (const activity of activities) {
@@ -179,7 +168,7 @@ async function status() {
     await getYearActivities()
 
     while (yearEnd.value.isAfter(startDate)) {
-        totalTargetSeconds.value += await getTotalHours(startDate) * 3600
+        totalTargetSeconds.value += (await getTotalHours(startDate)) * 3600
         startDate = startDate.add(1, 'month')
     }
 
@@ -218,6 +207,34 @@ onBeforeUnmount(() => {
     clearTimeout(statisticsTimeout.value)
 })
 </script>
+<template>
+    <div class="container">
+        <div class="card">
+            <div class="table">
+                <div class="cell name-col"><strong>Today:</strong></div>
+                <div class="cell">{{ helper.secToHMS(timeToday) }}</div>
+                <div class="cell name-col"><strong>Week:</strong></div>
+                <div class="cell">{{ helper.secToHM(timeWeek) }}</div>
+                <div class="cell name-col"><strong>Month:</strong></div>
+                <div class="cell">{{ helper.secToHM(timeMonth) }}</div>
+                <div class="cell name-col"><strong>Target:</strong></div>
+                <div class="cell">{{ targetHours }}</div>
+                <div class="cell name-col"><strong>Left:</strong></div>
+                <div class="cell">{{ helper.secToHM(timeLeft) }}</div>
+                <div class="cell name-col"><strong>Overtime:</strong></div>
+                <div class="cell">
+                    {{
+                        totalOvertime <= 0
+                            ? helper.secToHM(Math.abs(totalOvertime))
+                            : `-${helper.secToHM(totalOvertime)}`
+                    }}
+                </div>
+            </div>
+        </div>
+
+        <Footer />
+    </div>
+</template>
 <style scoped>
 * {
     box-sizing: border-box;

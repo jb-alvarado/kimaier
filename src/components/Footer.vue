@@ -1,3 +1,9 @@
+<script setup lang="ts">
+import { storeToRefs } from 'pinia'
+import { useMainStore } from '../stores/main'
+
+const { user, currentPage, page, isRunning } = storeToRefs(useMainStore())
+</script>
 <template>
     <div class="footer">
         <div>
@@ -48,12 +54,6 @@
         </div>
     </div>
 </template>
-<script setup lang="ts">
-import { storeToRefs } from 'pinia'
-import { useMainStore } from '../stores/main'
-
-const { user, currentPage, page, isRunning } = storeToRefs(useMainStore())
-</script>
 <style scoped>
 .settings-button {
     display: inline-block;

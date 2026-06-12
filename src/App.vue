@@ -1,11 +1,3 @@
-<template>
-    <div>
-        <Control v-if="currentPage === page.Control" />
-        <Statistics v-else-if="currentPage === page.Statistics" />
-        <Settings v-else />
-    </div>
-</template>
-
 <script setup lang="ts">
 import { onMounted } from 'vue'
 import Control from './components/Control.vue'
@@ -22,7 +14,6 @@ onMounted(async () => {
     await mainStore.getStore()
     if (
         !user.value ||
-        user.value.name === '' ||
         user.value.activity_id === 0 ||
         !user.value.week_hours ||
         user.value.week_hours === 0 ||
@@ -34,3 +25,10 @@ onMounted(async () => {
     }
 })
 </script>
+<template>
+    <div>
+        <Control v-if="currentPage === page.Control" />
+        <Statistics v-else-if="currentPage === page.Statistics" />
+        <Settings v-else />
+    </div>
+</template>
