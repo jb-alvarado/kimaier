@@ -10,13 +10,21 @@ jobs:
         strategy:
             fail-fast: false
             matrix:
-                platform: [macos-latest, ubuntu-latest, windows-latest]
+                include:
+                    - platform: 'macos-latest'
+                      args: '--target aarch64-apple-darwin'
+                    - platform: 'macos-latest'
+                      args: '--target x86_64-apple-darwin'
+                    - platform: 'ubuntu-latest'
+                      args: ''
+                    - platform: 'windows-latest'
+                      args: ''
         runs-on: ${{ matrix.platform }}
         env:
             TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
         steps:
             - name: Checkout repository
-              uses: actions/checkout@v3
+              uses: actions/checkout@v6
 
             - name: 'Build Changelog'
               id: build_changelog
@@ -48,9 +56,9 @@ jobs:
                   workspaces: './src-tauri -> target'
 
             - name: Sync node version and setup cache
-              uses: actions/setup-node@v3
+              uses: actions/setup-node@v6
               with:
-                  node-version: 'lts/*'
+                  node-version: 24
                   cache: 'npm'
 
             - name: Install app dependencies and build web
